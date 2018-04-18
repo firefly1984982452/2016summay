@@ -1,0 +1,23 @@
+0、需要哪些控件（第三方或自己要写的）
+下拉刷新、图片、异步任务类、
+
+1、分包
+ 自带放Activity
+common公用的：如网址、常量
+view页面：fragment
+adpter适配器
+model实体类
+service服务：本地服务、网络数据服务
+util工具包
+app:放Application
+weight:控件（第三方、自己写的）
+
+2、权限
+上网的权限、相机
+
+3、页面框架
+xUtils
+
+4、常用工具类
+http://blog.csdn.net/lmj623565791/article/details/38965311
+

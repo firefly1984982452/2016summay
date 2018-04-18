@@ -1,0 +1,69 @@
+ signingConfigs
+    signingConfigs {
+        // your debug keystore
+        debug{
+            storeFile file("F:/pay.jks")
+            storePassword "123456"
+            keyAlias "e"
+            keyPassword "123456"
+        }
+        release {
+            storeFile file("F:/pay.jks")
+            storePassword "123456"
+            keyAlias "e"
+            keyPassword "123456"
+        }
+    }
+
+
+ActivityThread: Failed to find provider info for com.tencent.mm.sdk.plugin.provider
+http://stackoverflow.com/questions/7463118/failed-to-find-provider-info-for-contentprovider
+http://www.mamicode.com/info-detail-897018.html
+
+最终结果：没有安装微信。。。。
+
+得到IP地址：
+request.getLocalAddr()
+
+	
+	//得到32位随机数
+	public static String getRandomStr(){
+		StringBuffer sb = new StringBuffer();
+		Random r = new Random();
+		String str = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
+		for (int i = 0; i < 32; i++) {
+			sb.append(str.charAt(r.nextInt(str.length())));
+		}
+		return sb.toString();
+	}
+	
+	//得到sign
+	public static String getSignStr(TreeMap<String, Object> map){
+		String info = "";
+		Set<String> keySet = map.keySet();
+		for (String string : keySet) {
+			info+=string+"="+map.get(string)+"&";
+		}
+		info+="key="+Constant.API_KEY;
+		return MD5.MD5Encode(info).toUpperCase();
+	}
+	
+	//得到日期
+	public static String getDataStr(String type){
+		Date date = new Date();
+		SimpleDateFormat format = new SimpleDateFormat(type);
+		return format.format(date);
+	}
+	
+	//转换为xml
+	public static String map2xml(TreeMap<String, Object> map){
+		String info = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+		info+="<xml>";
+		Set<String> keySet = map.keySet();
+		for (String string : keySet) {
+			info+="<"+string+">"+map.get(string)+"</"+string+">";
+		}
+		info+="</xml>";
+		return info;
+	}
+	

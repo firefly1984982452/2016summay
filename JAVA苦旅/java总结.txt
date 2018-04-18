@@ -1,0 +1,217 @@
+一、java基本：
+	数据类型
+		整型：byte short int long		0
+		布尔型：boolean					false
+		字符型：char 					'\u0000'
+		浮点型：float double			0.0
+		byte -> short -> char -> int -> long -> float -> double
+					  Character  Integer
+
+	引用类型
+		String、Class
+
+	初始化顺序
+		静态变量--静态初始化块--变量--初始化块--构造函数
+
+
+
+二、java核心：
+	1.封装
+		把核心的代码封装起来减少重复使用的次数
+
+	2.继承
+		把父类的功能继承到自己的身上，并有更多更强大的功能
+		基类---派生类（子类）
+		方法重写：
+			1.继承
+			2.覆盖父类的方法
+			3.访问修饰符
+				子类>=父类
+			3.异常
+				子类<=父类
+		构造方法
+			必须先创建父类构造方法，调用后必须写在第一行
+
+	3.多态
+		1.必须继承
+		2.重写
+		3.父类的引用指向子类的对象
+			Animal animal = new Cat();
+
+
+三、java易混淆点
+	1.list、set、map
+		遍历：迭代
+		set:
+			无序、不可重复
+			set.iterator();
+			it.hasNest();
+		list:
+			存储单列数据的集合
+			有顺序、允许重复
+			上同
+		map:
+			存储键和值这样的双列数据的集合
+			无顺序，键不能重复，值能重复
+			Set<String> set = map.keySet();
+			set迭代，再得到set的it.hasNest()
+			Entry<String,String>
+
+	2.异常
+		Error和Exception
+			Error：错误
+			Exception：异常
+			父类：Throwable
+
+		throw和throws
+
+	3.线程
+		sleep(毫秒):让X毫秒CPU					Thread类
+		wait():让出CPU，等待notify来唤醒		Object类
+
+	4.Hashtable和HashMap、ArrayList和Vector、LinkedList
+		Hashtable：线程安全，key值不可以为空
+		Vector：线程安全
+		HashMap：线程不安全，key值可以为空
+		ArrayList：线程不安全，效率高
+		LinkedList：纯种不安全
+		Hashtable和Vector是java一诞生就提供的，所以线程安全
+
+	5.堆、栈
+		堆：new创建的对象和数组
+		栈：引用变量
+		常量区
+
+	6.&&和&
+		&&：短路与		A不满足时，不执行B
+		&：与 			A不满足时，仍执行B
+		&和|：作位运算（二进制）
+
+	7.Abstract、Interface和Static、final
+		抽象类有构造方法，接口没有
+
+四、java jdk1.5知识点
+	1.枚举enum
+		限制只能写XX，静态内部
+
+类	2.泛型
+		参数化类型（只在new时才确认类型）,十分适用于参数不同的重载
+
+		泛型方法：
+			public static <T> t setXX(T t){
+				return t;
+			};
+		泛型类：
+			public class Class<E>{}
+
+	3.反射
+		把java类的所有成分映射成对象，最大的作用在于可以访问用private修饰的成员
+		对象：.class
+		构造器：getConstructor(null)
+		得到所有字段（包括私有）：getDeclaredFields()
+		强制打开访问权限：setAccessible(true);
+
+
+五、java考点：
+	1.lang包
+		String 、StringBuffer
+
+	2.util包
+		日期处理
+			Date
+			SimpleDateFormat
+			Calendar
+		集合处理
+			List
+			Map
+			Set
+		工具类
+			Collections
+			Arrays
+		异常
+			运行时异常：报错
+			编译时异常：try-catch
+			自定义异常：throw new RunExecption
+
+	3.io包
+
+	4.sql包
+
+	5.线程(util包)
+		获得当前线程名：Thread.currentThread().getName();
+
+		开启一个线程：
+			1.实现runnable接口
+			2.继承Thread类
+
+		互斥：
+			原因：两个线程抢资源
+			锁的机制：synchronized
+			死锁：双锁抢锁
+
+		线程池：Executors
+			多线程：
+				新建：ExecutorService es = Executors.newFixedThreadPool(4);//4个线程
+				执行：es.execute(new Runnable(){});
+				停止：ex.shutdown();
+
+			单线程：
+				Executors.newSingleThreadPool();
+				单线程：当遇到异常后，单线程会创建新线程，继续运行
+				普通线程：遇到异常后结束线程
+
+			缓存线程
+				Executors.newCachedThreadPool();
+				当内容过多时线程会自动增加
+
+			锁机制：
+				互斥锁：ReentrantLock();
+				加锁：lock.lock();
+				解锁：lock.unlock();
+
+	6.ArrayList遍历
+		方法一：
+			1.不要使用foreach，用迭代器
+			2.不用list自带的移除方法，用迭代器的list.remove(str);
+
+		方法二：
+			能用foreach
+			new CopyOnWriteArrayList
+
+六、解惑
+	1.线程安全是什么意思
+		当外部多个线程调用这个模块的时候，数据不会因为多线程读写造成数据不一致，就可以说是线程安全了。
+
+	2.Abstract、Interface和Static、final
+		Abstract
+	 		1、抽象类不能被实例化，实例化的工作应该交由它的子类来完成，它只需要有一个引用即可。
+	        2、抽象方法必须由子类来进行重写。
+	        3、只要包含一个抽象方法的抽象类，该方法必须要定义成抽象类，不管是否还包含有其他方法。
+	        4、抽象类中可以包含具体的方法，当然也可以不包含抽象方法。
+	        5、子类中的抽象方法不能与父类的抽象方法同名。
+	        6、abstract不能与final并列修饰同一个类。
+	        7、abstract 不能与private、static、final或native并列修饰同一个方法。
+
+	     Interface
+	        1、个Interface的方所有法访问权限自动被声明为public。确切的说只能为public，当然你可以显示的声明为protected、private，但是编译会出错！
+	        2、接口中可以定义“成员变量”，或者说是不可变的常量，因为接口中的“成员变量”会自动变为为public static final。可以通过类命名直接访问：ImplementClass.name。
+	        3、接口中不存在实现的方法。
+	        4、实现接口的非抽象类必须要实现该接口的所有方法。抽象类可以不用实现。
+	        5、不能使用new操作符实例化一个接口，但可以声明一个接口变量，该变量必须引用（refer to)一个实现该接口的类的对象。可以使用 instanceof 检查一个对象是否实现了某个特定的接口。例如：if(anObject instanceof Comparable){}。
+	        6、在实现多接口的时候一定要避免方法名的重复。
+
+	    final
+		    final类不能被继承，没有子类，final类中的方法默认是final的。
+	        final方法不能被子类的方法覆盖，但可以被继承。
+	        final成员变量表示常量，只能被赋值一次，赋值后值不再改变。
+	        final不能用于修饰构造方法。
+	        注意：父类的private成员方法是不能被子类方法覆盖的，因此private类型的方法默认是final类型的。
+
+	    static
+	        被static修饰的成员变量和成员方法独立于该类的任何对象。
+	        用public修饰的static成员变量和成员方法本质是全局变量和全局方法，当声明它类的对象时，不生成static变量的副本，而是类的所有实例共享同一个static变量。
+	        static表示不要实例化就可以使用，这样就容易理解多了。	 
+	        static修饰的成员变量和成员方法习惯上称为静态变量和静态方法，可以直接通过类名来访问，访问语法为：
+				类名.静态方法名(参数列表...) 
+				类名.静态变量名
+	        用static修饰的代码块表示静态代码块，当Java虚拟机（JVM）加载类时，就会执行该代码块。

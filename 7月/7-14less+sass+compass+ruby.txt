@@ -1,0 +1,91 @@
+上午：mui登录
+
+    页面跳转:
+        document.getElementById("reg").addEventListener('tap', function() {
+            mui.openWindow({
+                url: 'register.html',
+                id: 'register',
+            });
+        })
+
+下午：less+sass+compass+ruby
+    less
+            <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+            <link rel="stylesheet/less" type="text/css" href="css/hello.less"/>
+            <script src="js/less.min.js"></script>
+
+        hello.less:
+            @color: #f938ab;
+            #header {
+              color: @color;
+            }
+            h2 {
+              color: @color;
+            }
+
+
+    Compass用法指南
+        http://www.ruanyifeng.com/blog/2012/11/compass.html
+    Sass的用法
+        http://www.ruanyifeng.com/blog/2012/06/sass.html
+
+    Ruby
+
+
+晚上：mui 登录 相机
+    // 拍照
+    function captureImage(){
+        var cmr = plus.camera.getCamera();
+        var res = cmr.supportedImageResolutions[0];
+        var fmt = cmr.supportedImageFormats[0];
+        console.log("Resolution: "+res+", Format: "+fmt);
+        cmr.captureImage( function( path ){
+                alert( "Capture image success: " + path );  
+            },
+            function( error ) {
+                alert( "Capture image failed: " + error.message );
+            },
+            {resolution:res,format:fmt}
+        );
+    }
+
+其实，我说我不担心的话自己也不信，但我受挫太多，早习惯了。
+被骂过、说谎被拆穿过 ，被无视过，被鄙视过，被嘲笑过，被埋汰过，奋起直追仍失败过，所以，我不害怕只是因为经历过，不能代表什么。
+
+
+自我介绍
+    抬头挺胸
+    姓名、大学
+    出生
+    上家公司
+    为什么到上海发展
+    我在公司负责哪块
+
+    一心钻研技术，在那家公司以实习生身份进去，所以紧张
+    对技术有信心 
+    别说无关紧要的事情-
+
+    未来规划
+    拿项目
+
+
+    你好，我叫彭丹，我的名字是两句不相关的诗组成，“唯我彭大将军，留取丹心照汗青”，毕业于南京工业大学，上家公司在北京，当时毕业后以实习生身份去北京发展，一心钻研技术，公司又比较小，所以现在到上海来寻找更多的机遇和发展。
+    当时我所负责的模块主要是android应用开发，
+
+
+    有自己的想法
+
+    谈及自己的扩展能力
+    不断学习、时间观点
+
+    善于总结
+
+
+    OOM LISTVIEW优化 IMAGE优化
+    ACTIVITY生命周期
+    四大组件 + VIEW
+    布局
+
+
+
+    因为对江湖充满期待，所以不曾害怕

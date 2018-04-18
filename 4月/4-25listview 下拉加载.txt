@@ -1,0 +1,98 @@
+listview 下拉加载 总结
+
+	首先，简单的适配
+		//准备数据
+		List<String> datas = 页面1.GetData方法		然后传入start,end;
+		ArrayAdapter<String> adapter;
+		listView.setAdapter(adapter);
+		adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,datas);
+
+	然后，监听事件onScrollListener，实现它的两个方法 == onScrollStateChanged()和onScrollState()
+		onScrollStateChanged()停止
+		onScrollState()滑动静止
+	我们的下拉加载自然就是写在onScrollStateChanged()方法中，但是要用线程写，并用消息机制处理（或是用异步任务来做）
+	
+	List<String > list = DataService.getData(start, end);
+	//此时start和end的值应该都+20，写法如下：
+	start = end;
+	end = start + end;
+	//消息处理
+	Message msg = new Message();
+	msg.obj = list;
+	msg.what = 1;
+	handler.sendMessage(msg);
+	
+	//接收消息
+		@Override
+		public void handleMessage(Message msg) {
+			List<String> list = (List<String>)msg.obj;
+			datas.addAll(list);
+			//listview对应的数据发生改变之后，要通知listview更新。
+			adapter.notifyDataSetChanged();
+			Toast.makeText(MainActivity.this, "加载完成...", 0).show();
+			super.handleMessage(msg);
+		}
+		
+
+第三方控件：
+PullToRefreshListView
+	1.把所有的文件导入
+	2.按ctrl+shift+o导入R文件
+	3.把原来的listView改成“包名+类名”
+	4.在Activity文件中也改变相对应的名称
+	5.写入它的onPullUpToRefresh方法和onPullDownToRefresh方法。
+		cooklv.setMode(Mode.BOTH);// 同时支持上拉和上拉
+
+		cooklv.setOnRefreshListener(new OnRefreshListener2<ListView>() {
+
+			@Override
+			public void onPullDownToRefresh(
+					PullToRefreshBase<ListView> refreshView) {
+				// 下拉加载
+				SimpleDateFormat formatter = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss");
+				Date curDate = new Date(System.currentTimeMillis());// 获取当前时间--
+				String name = "上次加载时间：" + formatter.format(curDate);
+				cooklv.getLoadingLayoutProxy().setLastUpdatedLabel(name);// 设置最后刷新时间
+				cooklv.getLoadingLayoutProxy().setPullLabel("下拉可以加载更多哦");// 设置最后刷新时间
+				cooklv.getLoadingLayoutProxy().setLoadingDrawable(
+						getResources().getDrawable(R.drawable.ic_launcher));// 设置刷新图片
+				cooklv.getLoadingLayoutProxy().setRefreshingLabel("正在加载网络数据");// 设置刷新时显示的文字
+				cooklv.getLoadingLayoutProxy().setReleaseLabel("已加载完成，请松手");// 设置最后刷新时间
+				isPull = true;
+				index = index + pageSize;
+				getDatas();
+
+			}
+
+			@Override
+			public void onPullUpToRefresh(
+					PullToRefreshBase<ListView> refreshView) {
+				// 上拉刷新
+				SimpleDateFormat formatter = new SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss");
+				Date curDate = new Date(System.currentTimeMillis());// 获取当前时间--
+				String name = "six" + formatter.format(curDate);
+				cooklv.getLoadingLayoutProxy().setLastUpdatedLabel(name);// 设置最后刷新时间
+				cooklv.getLoadingLayoutProxy().setPullLabel("下拉可以加载更多哦");// 设置最后刷新时间
+				cooklv.getLoadingLayoutProxy().setLoadingDrawable(
+						getResources().getDrawable(R.drawable.ic_launcher));// 设置刷新图片
+				cooklv.getLoadingLayoutProxy().setRefreshingLabel("正在加载网络数据");// 设置刷新时显示的文字
+				cooklv.getLoadingLayoutProxy().setReleaseLabel("已加载完成，请松手");// 设置最后刷新时间
+				isPull = false;
+				index = index + pageSize;
+				getDatas();
+			}
+
+		});
+
+	6.添加声音
+		/**
+		 * Add Sound Event Listener
+		 */
+		SoundPullEventListener<ListView> soundListener = new SoundPullEventListener<ListView>(this);
+		soundListener.addSoundEvent(State.PULL_TO_REFRESH, R.raw.pull_event);
+		soundListener.addSoundEvent(State.RESET, R.raw.reset_sound);
+		soundListener.addSoundEvent(State.REFRESHING, R.raw.refreshing_sound);
+		 lv.setOnPullEventListener(soundListener);
+	

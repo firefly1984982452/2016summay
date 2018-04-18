@@ -1,0 +1,5 @@
+$("p").html("Hello <b>world</b>!");
+
+$("p").text("Hello world!");
+
+$("input").val("hello world!");

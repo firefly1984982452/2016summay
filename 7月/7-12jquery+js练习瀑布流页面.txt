@@ -1,0 +1,82 @@
+﻿jquery+js练习瀑布流页面
+$(document).ready(function() {
+    window.onload = init; //当图片加载完后
+    window.onscroll = sc; //当滚动进度条时
+    $(window).resize(init); //当浏览器页面大小改变时
+
+    function sc() {
+        //如果屏幕可见高度+滚动高度>=最后一张图片的高度+最后一张图片的一半，那么自动加载
+        if(($(window).scrollTop() + document.documentElement.clientHeight) >=
+            ($(".box").last().position().top + $(".box").last().outerHeight() / 2)) {
+            //加载更多
+            for(var i = 1; i < 26; i++) {
+                $(".content").append("<div class=\"box\"><div class=\"img_box\"><img src=\"img/" + i + ".jpg\" /></div></div>");
+            }
+            $("body").append("<div class=\"toast\">加载中……</div>");
+            //设置延时自动关闭
+            setTimeout(function() { $(".toast").hide(200);}, 1000)
+            init();
+        }
+    }
+
+    function init() {
+        /**
+         * 瀑布流图片代码分析
+         * 得到第一行图片个数、最短图片位置
+         * 个数：总长度/box长度
+         */
+        //得到屏幕长度
+        var clientW = document.body.clientWidth;
+        //得到单个box的长度
+        var box = $(".box").outerWidth();
+        //得到一行的个数
+        var count = parseInt(clientW / box);
+        //把图片在页面中居中
+        $(".content").css({
+            marginLeft: (clientW - box * count) / 2
+        })
+
+        var start = 0;
+        var end = start + count;
+        //循环，把个数的高传入数组
+        var arr = [];
+        $(".box").slice(start, end).each(function() {
+            arr.push($(this).outerHeight());
+        })
+
+        //循环，每次都要改变最短图片的位置
+        $(".box").each(function(n) {
+            //得到最短的图片及它所出现的位置，从0开始
+            var minHei = Math.min.apply(null, arr);
+            var posit = $.inArray(minHei, arr);
+            //即将要出现的图片的左边距就是位置*box长度
+            var width = posit * box;
+            //如果是第一行后面的图片
+            if(n >= count) { //如果是除第 一行后的后面几张
+                $(this).css({
+                    "position": "absolute",
+                    "left": width,
+                    "top": minHei,
+                });
+                arr[posit] += $(this).outerHeight();
+            }
+        })
+    }
+
+})
+
+
+
+自我评价 
+1.熟练使用Eclipse/MyEclipse/Android-Studio等开发环境。 
+2熟练使用Fragment,Viewpager等核心组件，熟悉Android里的多媒体开发。
+3.熟悉Android开发平台及框架原理，以及常见Android控件的使用，熟练掌握Android界面和交互开发。
+4.熟悉掌握Android常用布局、SQLite和SharedPreferences数据存储、Android四大组件。
+5.熟悉mySQL数据库与AsyncTask异步框架，熟练掌握Handler机制。 
+6.熟悉ListView的使用及优化，如复用ConvertView,使用ViewHolder缓存item条目的引用，数据的分批及分页加载，图片优化和上拉刷新、下拉加载等。
+7.熟悉HTML、CSS、JavaScript、jQuery Servlet、JSP等Web开发技术。 
+8.熟悉使用常用开源框架：xUtils、ImageLoader。 
+9.熟悉图片编程,图片的三级缓存,能够对图片的优化进行相应的处理。 
+10.熟悉如传感器、手电筒等android自硬件的开发。
+11.深刻理解OOP编程思想；熟练掌握常见的设计模式。 
+12时间观念较强，抗压能力较强，团队合作能力较强，有良好的交际能力。

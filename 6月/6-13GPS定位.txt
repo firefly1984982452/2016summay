@@ -1,0 +1,7 @@
+GPS定位
+网络数据定位
+API23新权限
+
+canvals 
+webview
+存储

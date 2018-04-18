@@ -1,0 +1,18 @@
+Conversion to Dalvik format failed: Unable to execute dex: Multiple dex files define Lcom/google/gson/JsonSerializer;
+原因，导入的包多余或重复！！
+
+
+view.findViewById
+而不是getActivity()
+
+自动刷新数据
+
+	@Override
+	public void onResume() {
+		datas = cd.FindNote();
+		adapter.datas=datas;
+		adapter.notifyDataSetChanged();
+		super.onResume();
+	}
+
+第一更到今天为止。

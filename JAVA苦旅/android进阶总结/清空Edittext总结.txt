@@ -1,0 +1,87 @@
+1、素材：图片一张， EditText
+
+
+2.怎么样把图片放到EditText右边？
+	android:drawableRight="@drawable/ic_search_clear"
+
+
+3、涉及到了哪些事件？
+
+	1)获取焦点事件。
+		setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				// 在有文字的时候，显示图片。
+				if (hasFocus == true && !getText().toString().equals("")) {
+					setCompoundDrawables(d[0], d[1], d[2], d[3]);
+				} else if (hasFocus != true) {//在没有文字的时候，隐藏图片。
+					setCompoundDrawables(d[0], d[1], null, d[3]);
+				}
+			}
+		});
+
+	2)文字查看监听事件。
+		addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				// 失去焦点的时候，干掉图片。
+				if (count == 0) {
+					setCompoundDrawables(d[0], d[1], null, d[3]);
+				} else {//获取焦点并且没有文字的时候干掉图片，有文字的时候显示图片
+					setCompoundDrawables(d[0], d[1], d[2], d[3]);
+				}
+			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+
+			}
+		});
+
+	3)触摸事件。
+		setOnTouchListener(new OnTouchListener() {
+			//点击图片的时候，清空内容，干掉图片
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (event.getAction() == MotionEvent.ACTION_UP
+						&& (event.getX()>getWidth() - getTotalPaddingRight())&&
+								(event.getX()<getWidth() - getPaddingRight())) {
+					setCompoundDrawables(d[0], d[1], null, d[3]);
+					setText("");
+				}
+				return false;
+			}
+		});
+
+
+4、流程。
+    1)怎么样获取右边的图片。 drawables = et.getCompoundDrawables();
+    2)怎么样干掉右边的图片。 et.setCompoundDrawables(drawables[0],drawables[1], null, drawables[3]);
+   /**
+   * 当手指抬起的位置在clean的图标的区域我们将此视为进行清除操作
+   * getWidth():得到控件的宽度
+   * event.getX():抬起时的坐标(改坐标是相对于控件本身而言的)
+   * getTotalPaddingRight():clean的图标左边缘至控件右边缘的距离
+   * getPaddingRight():clean的图标右边缘至控件右边缘的距离
+   * 于是:
+   * getWidth() - getTotalPaddingRight()表示:控件左边到clean的图标左边缘的区域A
+   * getWidth() - getPaddingRight()表示:控件左边到clean的图标右边缘的区域B
+   * 所以这两者之间的区域刚好是clean的图标的区域
+   * 当控件>A，而且，控件<B，则是那个图片
+   */
+
+
+5、使用自定义控件
+	5-1：新建一个类，继承EditText
+	5-2：实现它的三个构造方法，让它们每个都执行同一个方法
+	5-3：把上面的三个监听事件写进去
+	5-3：在xml中使用时要包名+类名
+

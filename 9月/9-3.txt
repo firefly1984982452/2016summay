@@ -1,0 +1,11 @@
+    报错：Conversion to Dalvik format failed: Unable to execute dex: Multiple dex files define Lcom/tencent/a/a/a/a/a;
+    解决：Unable to execute dex: Multiple dex files define Landroid/support
+    看上去应该是包重复引用造成的。你可以尝试以下方法：
+    1、Java Build Path---Order and Export:
+    2、或者查看Libraries下面是否有Jar的重复引用，如果有则删除重复引用的jar包即可
+    参考：https://github.com/NetEase/Emmagee/issues/23
+
+    Caused by: java.lang.ClassNotFoundException: Didn't find class "org.litepal.LitePalApplication" on path: DexPathList[[zip file "/data/app/com.mrlou.mrlou-1/base.apk"],nativeLibraryDirectories=[/data/app/com.mrlou.mrlou-1/lib/arm, /vendor/lib, /system/lib]]
+
+
+    

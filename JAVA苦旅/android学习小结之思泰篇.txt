@@ -1,0 +1,303 @@
+(注：此小结文档在全屏模式下观看效果最佳)
+
+2016年3月1日，正式开始了我的android学习之路。
+ 最最开始的，当然是学习怎样搭载环境了，然而苦逼的我在win10各种坑爹的指引下还是安装了一个星期才终于安装好各种环境。而且这仿佛就是为后文做铺垫，暗示了主人公在android学习中的各种不顺。
+ 然后呢，既然为总结，那就有白话文居多，想法居多，代码为辅助吧~
+
+0.环境抢建
+	在后期的学习中，我才知道，不仅是eclipse，myeclipse也同样可以开发安卓，同样都是加一个ADT插件而已，所以两者都能做到。然后苦逼的我还是一直在安装卸载各种不同版本的eclipse和myeclipse。。。
+
+1.线性布局、相对布局、表格布局、帧布局
+	线性布局(Linearlayout)：
+		有顺序、有次序、有条理的摆放着。。。（这是我的理解，或者说是我的表达方式）
+		分垂直摆放（Vertical)和平行摆放(horizontal)
+	相对布局(Relativelayout)：
+		所有控件都要给id，然后通过上一个控件的id来确定下一个控件的相对位置
+	表格布局(Tablelayout)：
+		很少用到
+	帧布局(Framelayout)：
+		平时也很少用到，但到今天突然想到可以用来做那个置顶按钮
+	
+2.点击事件和页面切换
+	注意点：导包。
+	注意点：导包。
+	注意点：导包。
+	（重要的事情说三遍，下文就不再赘述）
+	快捷键：Ctrl+Shift+O
+
+	2-1点击事件：
+		2-1-1.使用监听事件
+			在类中继承点击事件====implements onClickListener
+			然后，创建public void onClick(){}类
+		2-1-2.绑定按钮，再绑定事件
+			Button btn = (Button)findViewById(R.id.btn);
+			//绑定事件也有匿名内部类和监听方式
+			btn.setonClickListener(this);//适合多个按钮
+			btn.setonClickListener(new onClickListener(){……})//适合少量按钮
+			（话说我这是纯手打，没有复制粘贴，也不知道单词有没有写错，将就着看哈~）
+	2-2传递数据用intent,传递数组用bundle
+		另外我最近终于能理解了把Intent用一句话跳转的代码，终于到了能接受的水平了。。
+		startActivity(new Intent(this,XX.class));
+		
+		//用bundle传递数组
+			Intent intent = new Intent();
+			Bundle b = new Bundle();
+			b.putStringArray("键名", 数组名);
+			intent.putExtras(b);
+			intent.setClass(this, 要跳转的类的名字.class);
+			startActivity(intent);
+		//另一个页面接收：
+			Intent intent = getIntent();
+			Bundle b = this.getIntent().getExtras();
+			String[] s = b.getStringArray("键名");
+			然后准备接收的TextView或是EditView
+			tv.setText(s[0]);
+	还清楚地记得第一次用按钮实现页面跳转后激动的心情。。
+
+3.触摸事件
+	Touch
+	ACTION_DOWN,表示按下了屏幕
+	ACTION_MOVE //表示为移动手势
+	ACTION_UP //表示为离开屏幕
+	ACTION_CANCEL //表示取消手势
+	这是在网上找的，觉得这种可能更适合于玩游戏吧
+
+4.基础控件
+	button、textView、EditView、scrollview、toast这些都不讲了
+	checkbox：单选、radiogroup：多选
+	用idChecked()来判断选择了哪一个
+	需要注意的是，在多选中，需要用一个数组来接收它是否被选。（true,false）
+
+5.toogleButton以及Switch
+	Switch现在用得更多，比toogleButton界面美观，用户体验也要好。
+	点击事件：
+		用isChecked来判断点击的是哪一个，然后做相对应的回应。
+	
+6.shap以及selector的使用
+	功能：相当于自定义一个模板
+	首先，要新建一个drawble文件夹
+	然后，再新建一个XML文件
+		在<shap></shap>中写内容
+		<corners/>圆角
+		<stroke/>边框
+		<gradient/>渐变
+	比如说要在按钮中使用它：
+		android:background="@drawable/XX";（XX就是文件名）
+
+7.进度条（ProgressBar）
+	默认为圆形，类似加载的样子，如果想要设置为下载的样式，可以选择它的样式为横向。
+	style="?android:attr/progressBarStyleHorizontal"
+
+	顺便一提进度条对话框，相似，但也有不同的地方。进度条对话框用来做下载的进度比传统的进度条的客户体验要更好。
+		ProgressDailog name=新建。。。
+		设置它的标题、信息、总值、当前值、样式（默认为圆形，如果想做下载效果，可在此处设置为横向）
+		设置它的按钮，并添加点击事件（如更新和取消更新）
+		设置它的不可取消。
+		设置它的可见性，即show()方法。
+
+8.listView
+	和Linearlayout差不多一样是一条一条的摆放着的，不过，它的内容是由适配器搭配提供。给出要填进去的数据，然后给出要填的位置即可。
+	真的太简单了，不想写，，，，就是适配呀。。。
+9.GridView
+	和listView差不多，只不过要限定列数，即一列摆放几个。
+
+10.tabHost
+	差不多过时了，有viewPager代替了。
+	但是它做到的效果如现在手机上APP的大部分排版一样都是滑动切换的效果（它是点击切换）。
+	xml:
+ 	   <TabHost
+     	  	android:id="@+id/tabhost"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content" >
+
+       	 	<LinearLayout
+           		android:layout_width="match_parent"
+            		android:layout_height="match_parent"
+            		android:orientation="vertical" >
+
+            		<TabWidget
+                		android:id="@android:id/tabs"
+                		android:layout_width="match_parent"
+                		android:layout_height="wrap_content" >
+           		</TabWidget>
+
+            		<FrameLayout
+                		android:id="@android:id/tabcontent"
+                		android:layout_width="match_parent"
+                		android:layout_height="match_parent" >
+
+            		</FrameLayout>
+        	</LinearLayout>
+   	 </TabHost>
+
+	java:
+		TabHost th = (TabHost) findViewById(R.id.tabhost);
+		th.setup(); // 初始化TabHost容器
+		//如果使用填充布局，则用这个。即tab内容分开
+		LayoutInflater i = LayoutInflater.from(this);
+		i.inflate(R.layout.activity_gride_view_weater, th.getTabContentView());
+		i.inflate(R.layout.activity_list_view, th.getTabContentView());
+		i.inflate(R.layout.checkbox, th.getTabContentView());
+		
+		// 在TabHost创建标签，然后设置：标题／图标／标签页布局
+		th.addTab(th.newTabSpec("tab1").setIndicator("标签1").setContent(R.id.ll1));
+		th.addTab(th.newTabSpec("tab2").setIndicator("标签2").setContent(R.id.ll2));
+		th.addTab(th.newTabSpec("tab3").setIndicator("标签3").setContent(R.id.linearlyt));
+
+11.http网络通信
+	止不住的眼泪流，，，，自从学到了网络部分，腰不酸腿不疼心也不跳了。。。
+	首先，权限。要设置上网的权限。
+	关键的类：
+		URL 当然就是你要连接的地址了，如我们上课时是用的聚合数据的网络，那地址就用它提供的地址。
+		URLHttpConnection 连接
+			设置请求连接的方式（GET或POST）
+			设置请求连接的时间（一般情况下好像不限时间吧）
+			设置返回码（200为成功）
+		此时，便可得到数据
+12.json解析
+	相对于jsonObject，gson简直太好用了。
+	得到数据之后，它是展示方式，是json类型，不方便用户的观看，所以要由我们来将它转换成用户能看懂的方式。
+	我就直接说gson吧
+	12-1：先得到获取到的数据
+		String s = sb.toString();
+	12-2:新建Gson
+		...略
+	12-3：初始化
+		JsonObject jo = new JsonParser().parser(数据).getAsJsonObject();
+		//解析：	   新建的解析  调用它来解析得到的数据  
+	12-3:开始解析
+		JsonObject name1 = jo.getAsJsonObject("第一个结点名").getAsJsonObject("第二个结点名");
+		//解析  如果第一个结点是对象就用Object,否则用Array，后面同理
+	12-4：如果有很多很复杂的，同理，一直循环嵌套即可
+
+13.异步任务类
+	因为主线程中不能做耗时操作，所以如果像上文中解析之后还要传数据就比较麻烦，要么用Handler消息接收机制来接收数据，要么，就用这里的异步任务类。
+
+14.xml解析
+	和json很像，然而要比json简单得多，因为这个是可以自己定义的，不过也大同小异啊。json数据更多来自于是网络，而xml解析更多来自于自己存入的文件，如城市选择。
+	我就写PULL解析吧
+	14-1:要获取xml文件
+		Resourse re = getResources();
+		InputStream in = re.getAssets.open("文件名.xml");
+	14-2:使用XmlPull工厂来解析,初始化它，包括解析的字符格式
+		XmlPullParserFactory factory = ....getInstanse();
+		XmlPullParser parser = factory.newPullParser();
+		parser.setInput(in,"utf-8");
+	14-3:开始解析
+		首先要说明的是PULL解析的格式是由4个标志来完成的，START_DOCUMENT和ENT_DOCUMENT自然就是指文档开始和结束；START_TAG和END_TAG就是指节点的开始和结束。
+		//得到它的标识（可能不是这样说，表达不了，但是我理解了。）
+		int event = parser.getEnventType();
+		while(event!=XmlPullParser.END_DOCUMENT){把它另外三种情况分别对应的代码由它在这里}
+		START_DOCUMENT:新建要解析的对象;
+		START_TAG:解析，当结点名等于我们写入的名称之后，新建一个相对应的对象。
+		END_TAG:节点结束后要做的操作，一般是添加数据进去
+		
+15.popupWindow
+	浪漫的名字，用处挺多的，比如在选择相机按钮后往往会弹出窗口拍照或是相册。
+	15-1：首先，要新建页面写你要点开之后显示的页面，当然，也可以用现成的。
+	15-2：用打气筒inflate把它填充进去
+    		v = LayoutInflater.from(PopupActivity.this).inflate(R.layout.angry, null);
+	15-3：新建popupWindow，设置它的宽高和刚刚inflate的页面。
+    		PopupWindow pw = new PopupWindow(v, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
+	15-4：设置它的点击和背景（一定要有背景）
+ 	   	pw.setFocusable(true);
+    		pw.setOutsideTouchable(true);
+    		pw.setBackgroundDrawable(getResources().getDrawable(R.drawable.fox));
+	15-5：设置它的显示位置，最好是以哪一个控件的ID作为参考
+	    	pw.showAsDropDown(btn);
+
+16.dialog各种弹窗
+	16-1：普通的询问式Dialog，比如询问是否删除、升级等等，一般写在点击事件里面
+		AlertDialog.Builer dialog1 = 新建
+		设置dialog1的标题、内容及“确定”和“取消”按钮所对应的事件
+		设置它的不可随便取消和显示
+	16-2：进度条Dialog，要进度条时已经写了。
+	16-3：日期Dialog
+		16-3-1：首先，要新建一个日历
+			Calendar c = 新建
+		16-3-2：设置日期
+			DatePickerDialog d = 新建（上下文，新建一个日期设置，c.get(Calendar.Year)，月【同年】，日【同年】）；
+		16-3-3：设置它的标题和不可随便取消及显示。
+	16-4：时间Dialog 同日期略
+	16-5：自定义对话框
+		16-5-1：Dialog dialog2 = 新建
+		16-5-2：设置它的标题和不可随便取消及显示
+		16-5-3：设置它的页面
+			dialog2.setContentView(R.layout.页面名);
+	16-6:单选对话框
+		16-6-1：同普通Dialog一样新建及设置
+		16-6-2：新建单选项的内容（即新建数组）
+		16-6-3：将点击事件写成单选按钮监听事件
+			builder1.setSingleChoiceItems
+	16-7：多选对话框 同上，略
+		（注：多一个步骤，就是把数组数据的值设为true或false）
+
+17.本地存储
+	17-1：SharedPreference:轻量级键值方式存储，适用于存储用户名和密码，以<String key,String value>的形式存储
+		17-1-1：SharedPreference sp = getSharedPreferences("collectInfo", MODE_PRIVATE)；
+		17-1-2：SharedPreference.Editor e = sp.edit();
+		17-1-3:存储
+			e.putString("键名",user_name);
+		17-1-4:提交
+			e.commit();
+		17-1-5:以键名为索引来取出数据
+			（一般是在另一个Activity中来获取它）
+			SharedPreferences sp = this.getSharedPreferences("collectInfo", 0x0000);
+			String name = sp.getString("键名","");
+		17-1-6:清除数据
+			e.clear.commit();
+			e.edit().remove(key);删除单个数据
+		17-1-7:存入XML后的内容目录在：
+			/data/data/<包>/shared_prefs/***.xml
+	17-2：SQLite:轻量级数据库存储，适用于用户数据及要操作的数据
+		就拿我最近写的便笺APP来总结它吧
+		17-2-1：先新建一个类，存id、标题、内容等等。
+			略。但是注意一定要有构造方法，最好多写几种构造方法
+		17-2-2：再新建SQLite的创建类
+			a:让类继承SQLiteOpenHelper，然后调用它的构造方法
+			b:写入版本号和数据库的名字
+			c:在onCreate方法中创建，在onUpgrade方法中升级
+			  数据库的创建代码如下：
+			    create table if not exists 表名(_id integer primary key autoincrement,content varchar(20));
+								整型    主键      自增
+			    dp.execSQL(上面的代码);
+			  数据库的升级代码如下：
+			    drop table 表名
+			    再执行一遍创建的代码
+		17-2-3：新建SQLite的Dao类，即对它增删改查的类
+			a.它的值有SQLiteDatabase和SQLite类以及上下文
+			b.它的构造方法为：
+				public NotesDao(上下文){
+					super()和上下文略
+					SQLite = 新建
+					Database = SQLite.getWritableDatabase();
+				}
+			c.增、删、改、查
+			  前三个就是写sql和传值
+			  查：写Sql语句查询到之后用邮标来接收
+			      然后，只要c.moveToNext()有值，就取出它的值（id,content等等）
+			      再：新建一个Note对象来接收它，然后再把它添加到List中去
+		17-2-4：操作类，就是主页啊，或是什么。。
+			私认为，应该在打开主页之后就执行查询所有数据的功能
+
+18.viewPager
+	现在大多数android软件，都99.9%有用到它，然而，我想吐槽的是，到现在我还没用过它，用不了。。先用Fragment碎片代替它，后来又用tabhost代替它，到现在不用代替了，干脆不写那种滑动切换的效果了。。。
+	18-1：它是最近出来的控件，所以要导入全称
+		<android.support.v4.view.ViewPager/>
+	18-2:加载要显示的页面
+		LayoutInflater lf = getLayoutInflater().from(this);
+			view1 = lf.inflate(R.layout.layout1,null);
+			view2上同，如果还有view3、4、5一样上同
+			viewList = new ArrayList<View>();将要分布显示的view装入数组中
+			viewList.add(view1);234也同样装入
+	18-3：在Activity里实例化ViewPager组件，并设置它的Adapter，此处的Adapter为PageAdapter，方法与ListView一样
+		18-3-1:在isViewFromObject方法中写return arg0==arg1;
+		18-3-2:在getCount()中return viewList.size();
+		18-3-3:在其它几项中只要相对应了就可以
+		18-3-4：instantiateItem(ViewGroup container,int position)：创建指定位置的页面视图
+			container.addView(viewList.get(position));
+			return viewList.get(position);
+
+为期一个半月，学了大部分的基础了，后面的日子就是写项目了。
+
+以上，感谢大壮您的观看~

@@ -1,0 +1,7 @@
+gmail邮箱
+	firefly1984982452@gmail.com
+	fkuemydabcd12345
+
+	netsh wlan set hostednetwork mode=allow ssid=帐号（要打英文或数字） key=密码（要打英文或数字） 【创建无线账户】
+	netsh wlan start hostednetwork 【开启无线网络】
+	netsh wlan stop hostednetwork【停止无线网络】

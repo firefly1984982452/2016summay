@@ -1,0 +1,5 @@
+    http://chishenme.huangyafei.com/   这个页面写的挺有意思 的   
+
+
+    <script type="text/tpl"> 
+    js还有模板

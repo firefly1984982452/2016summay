@@ -1,0 +1,117 @@
+1.使用方法：
+	public boolean onCreate() 
+		在创建ContentProvider时调用
+
+	public Cursor query(Uri, String[], String, String[], String) 
+		用于查询指定Uri的ContentProvider，返回一个Cursor
+
+	public Uri insert(Uri, ContentValues) 
+		用于添加数据到指定Uri的ContentProvider中
+
+	public int update(Uri, ContentValues, String, String[]) 
+		用于更新指定Uri的ContentProvider中的数据
+
+	public int delete(Uri, String, String[]) 
+		用于从指定Uri的ContentProvider中删除数据
+
+	public String getType(Uri) 
+		用于返回指定的Uri中的数据的MIME类型
+
+
+2.用内容提供者来获取联系人信息
+	35-1：权限
+		<!-- 对联系人的读、写权限 -->
+    		<uses-permission android:name="android.permission.READ_CONTACTS" />
+    		<uses-permission android:name="android.permission.WRITE_CONTACTS" />
+	35-2：新建实体类存放联系人
+		int c_id;
+		String c_name;
+		String c_phone;
+		String c_email;
+		set和get方法以及构造方法
+	35-3：新建Uri
+		Uri uri = ContactsContract.Contacts.CONTENT_URI;//联系人姓名
+		Uri uriPhone = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;//联系人电话
+		Uri uriEmail = ContactsContract.CommonDataKinds.Email.CONTENT_URI;//联系人邮箱
+	35-4：新建ContentResolver
+		ContentResolver resolver = this.getContentResolver();
+	35-5：用邮标来获取联系人名字
+		35-5-1：新建地址，通过邮标查询
+			Cursor cursor = resolver.query(uri, null, null, null, null);
+		35-5-2：开始查询
+			int contactIdIndex = 0;//联系人ID
+			int nameIndex = 0;//联系人姓名
+			if(cursor.getCount()>0){
+				contactIdIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+				nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+			}
+		35-5-3：通过邮标的moveToNext()方式获取值
+			while(cursor.moveToNext()){
+				String contactId = cursor.getString(contactIdIndex);
+				name = cursor.getString(nameIndex);
+				……（此处还有下文代码）
+			}
+	35-6：用邮标来获取联系人号码（在上文while循环的基础上继续）
+		35-6-1：新建电话号码的Cursor邮标
+			//selection相当于SQL中的Where语句吧
+			String selection = ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" +contactId;
+			Cursor phones = this.getContentResolver().query(uriPhone,null, selection, null, null);
+			int phoneIndex = 0;
+		35-6-2如果查询到了，就返回phoneIndex
+			if(phones.getCount()>0){
+				phoneIndex = phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+			}
+		35-6-3：同上获取值
+			while(phones.moveToNext()){
+				phoneNumber = phones.getString(phoneIndex);
+				……(如果还要获取邮箱，同理在此处写上代码)
+			}
+	35-7：获取邮箱
+		35-7-1：新建邮标查询
+			String selectionEmail = ContactsContract.CommonDataKinds.Email.CONTACT_ID +"="+contactId;
+			Cursor email = this.getContentResolver().query(uriEmail, null, selectionEmail, null, null);
+		35-7-2：查询并返回
+			int emailIndex = 0;
+			if(email.getCount()>0){
+				emailIndex = email.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+			}
+		35-7-3：同上获取值
+			while (email.moveToNext()) {
+				Email = email.getString(emailIndex);
+			}
+	
+
+	如果觉得看得麻烦，可以直接用下面现成的代码：
+	注：请加权限及实例
+
+		Toast.makeText(getApplicationContext(), "正在获取信息", 0).show();
+		ContentResolver resolver = this.getContentResolver();
+		Cursor cursor = resolver.query(uri, null, null, null, null);
+		int contactIdIndex = 0;
+		int nameIndex = 0;
+		Contact contact;
+		if (cursor.getCount() > 0) {
+			contactIdIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+			nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+		}else{
+			Toast.makeText(getApplicationContext(), "您没有联系人信息", 0).show();
+		}
+		while (cursor.moveToNext()) {
+			String contactId = cursor.getString(contactIdIndex);
+			name = cursor.getString(nameIndex);
+
+			String selection = ContactsContract.CommonDataKinds.Phone.CONTACT_ID+ "=" + contactId;
+			Cursor phones = this.getContentResolver().query(uriPhone, null,selection, null, null);
+			int phoneIndex = 0;
+			if (phones.getCount() > 0) {
+				phoneIndex = phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+			}
+			while (phones.moveToNext()) {
+				phoneNumber = phones.getString(phoneIndex);
+				Toast.makeText(getApplicationContext(), name+"==="+phoneNumber, 0).show();
+				contact = new Contact(name, phoneNumber);
+				list.add(contact);
+			}
+		}
+
+	

@@ -1,0 +1,6 @@
+    
+    先清除缓存，再存储数据
+        $("#search_list").children().remove();
+        $("#search_list").append("<option>"+keyword+"</option>");
+
+    2

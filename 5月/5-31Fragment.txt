@@ -1,0 +1,56 @@
+在 Android3.0及以上版本，LinearLayout支持直接显示分隔线。设置<LinearLayout>标签的 android:showDividers属性可以再LinearLayout的相应位置显示分隔线。如果有多个LinearLayout，显示效果和在 LinearLayout之间加分隔线是一样的。
+android:showDividers属性可以设置如下4个值：
+none：不显示分隔线；
+beginning：在LinearLayout的开始处显示分隔线；
+end：在Linearlayout的结尾处显示分隔线；
+middle：在LinearLayout中的每两个组件间显示分隔线：
+除了需要设置android:showDividers属性外，还要设置android:divider属性，该属性表示分隔线的图像，需要一个Drawable ID
+
+
+5、Fragment常用的API：
+
+Fragment常用的三个类：
+
+android.app.Fragment 主要用于定义Fragment
+
+android.app.FragmentManager 主要用于在Activity中操作Fragment
+
+android.app.FragmentTransaction 保证一些列Fragment操作的原子性，熟悉事务这个词，一定能明白~
+
+a、获取FragmentManage的方式：
+
+getFragmentManager() // v4中，getSupportFragmentManager
+
+b、主要的操作都是FragmentTransaction的方法
+
+FragmentTransaction transaction = fm.benginTransatcion();//开启一个事务
+
+transaction.add() 
+
+往Activity中添加一个Fragment
+
+transaction.remove()
+
+从Activity中移除一个Fragment，如果被移除的Fragment没有添加到回退栈（回退栈后面会详细说），这个Fragment实例将会被销毁。
+
+transaction.replace()
+
+使用另一个Fragment替换当前的，实际上就是remove()然后add()的合体~
+
+transaction.hide()
+
+隐藏当前的Fragment，仅仅是设为不可见，并不会销毁
+
+transaction.show()
+
+显示之前隐藏的Fragment
+
+detach()
+
+将此Fragment从Activity中分离，会销毁其布局，但不会销毁该实例
+
+attach()
+
+将从Activity中分离的Fragment，重新关联到该Activity，重新创建其视图层次
+
+transatcion.commit()//提交一个事务

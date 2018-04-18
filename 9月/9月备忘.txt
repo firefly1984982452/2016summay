@@ -1,0 +1,15 @@
+    lxs_consultant_recommand.js 279行
+    /* ajax.getRecommonagent(building_id,limit,function (data) {
+            clear && $('#consultants').html('');
+            that.createConsultant(data.list);
+        });*/
+
+    lxsInterFace.js 69行
+    /*getRecommonagent : function (building_id,limit) {
+        var url = 'http://test.imrlou.com/api/recommonagent';
+        var data = {
+            building_id : building_id,
+            limit : limit
+        }
+        ajax(url,data,success,fail,'post');
+    },*/

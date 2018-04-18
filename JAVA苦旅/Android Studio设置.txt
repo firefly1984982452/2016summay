@@ -1,0 +1,96 @@
+4、Android Studio设置
+	4-1：使用炫酷的黑色界面，Settings –> Appearance –> Theme ，选择 Darcula 主题即可
+		Android Studio及SDK下载
+		下载地址：http://www.androiddevtools.cn/
+
+
+	4-2：申请大内存
+		as安装目录/bin/studio64.vmoptions or studio.vmoptions(linux下，其他系统找类似文件)
+		使用文本编辑器打开，找到起始两行，如下
+			-Xms128m
+			-Xmx750m
+
+		修改最小值和最大值，建议为
+			-Xms256m
+			-Xmx2048m
+
+5、Android Studio使用技巧
+	5-1：自动导入
+	当你从其他地方复制了一段代码到Android Studio中，默认的Android Studio不会自动导入这段代码中使用到的类的引用。
+	Settings–> Editor–> Auto Import，设置Insert imports on paste为All，并勾选 Add unambiguous improts on the fly。
+
+	5-2：显示行号
+	Settings –> Editor –> General –> Appearance ，勾选 Show line numbers 。
+
+
+	5-3：plugins
+	请看这里：Android Studio中常用插件及浅释
+
+	5-4：分析某个值的来源
+	Find Actions(ctrl+shift+a)输入”Analyze Data Flow to Here”，可以查看某个变量某个参数其值是如何一路赋值过来的。
+	对于分析代码非常有用。
+	Analyze Data Flow to Here
+
+	5-5：多行编辑
+	强大的神技之一，用过vim的vim-multiple-cursors或者Sublime Text的多行编辑都不会忘记那种快感！ 也许不是平时用得最多的技能，但是却是关键时刻提高效率的工具。
+	快捷键：Alt+J
+
+	5-6：列编辑
+	在vim中叫作块编辑，同样神技！使用方法：按住Alt加鼠标左键拉框即可，另外也可按Alt+Shift+Insert之后拖框选择。
+
+	5-7：分析堆栈信息
+	Find Actions(ctrl+shift+a)输入”analyze stacktrace”即可查看堆栈信息。
+
+6、Android Studio常用快捷键
+        功能			快捷键
+        代码注释(//)		Ctrl+/
+        代码注释(/*)		Ctrl+Shist+/
+        清除无用的包引用	Ctrl+Alt+O
+        快速覆盖方法		Ctrl+O
+        放大选中范围		Ctrl+W
+        缩小选中范围		Ctrl+Shift+W
+        代码的大小写转换	Ctrl+Shift+U
+        文件方法结构（查看整个类结构）	Ctrl+F12
+        新建Constructor Getter Setter..	Alt+Insert
+        折叠代码		Ctrl+ -
+        展开代码		Ctrl+ +
+        折叠所有代码		Ctrl+Shift+ -
+        展开所有代码		Ctrl+Shift+ +
+        删除一行代码		Ctrl+Y
+        代码上移		Ctrl+Shift+UP
+        代码下移		Ctrl+Shift+Down
+        搜索			Ctrl+F
+        查找替换		Ctrl+R
+        搜索无处不在		Shift+Shift
+        搜索类			Ctrl+N
+        搜索文件		Ctrl+Shift+N
+        搜索字符		Ctrl+Shift+Alt+N
+        查找line行		Ctrl+G
+        构建			Ctrl+F9
+        运行			Shift+F10
+        显示最近打开的文件列表	Ctrl+E
+        显示最近修改的文件列表	Ctrl+Shift+E
+        智能代码补全		Ctrl+Shift+空格
+        代码自动完成		Ctrl+Shift+Enter
+        意图行动，也可点击前面的灯泡	Alt+Enter
+        重构(refactor),重命名	Shift+F6
+        重构，提取代码到单独的方法	Ctrl+Alt+M
+        可以把代码包在一块内，例如try/catch	Ctrl+Alt+T
+        重构，可选项更多	Ctrl+Shift+Alt+T
+        动态模版		Ctrl+J
+        可以整合两行		Ctrl+Shift+J
+        单步调试		Ctrl+F8
+        模拟器旋转屏幕		Ctrl+F11
+        显示类或方法详情，也就是看javadoc详情	Ctrl+Q
+        关闭打开的文件		Alt+F4 或者Shift+click
+        跳转到上次编辑的地方	Ctrl+Shift+backspace
+        计算变量值		Alt+F8
+        在方法间上下移动	Alt+up/down
+        启用/禁用拼写检查	Ctrl+Alt+H
+        查看方法的调用位置	Ctrl+Shift+H
+        查看类的继承关系	Ctrl+H
+        git commit changes	Ctrl+K
+        git push commits	Ctrl+Shift+K
+        添加或移除书签		F11
+        显示书签		Shift+F11或者Favorates里查看
+        查找Actions		Ctrl+Shift+A

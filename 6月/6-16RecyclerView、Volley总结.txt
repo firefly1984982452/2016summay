@@ -1,0 +1,228 @@
+RecyclerView使用总结：
+
+遇到的异常：
+
+	java.lang.ExceptionInInitializerError静态块初始化异常
+
+	NetworkOnMainThreadException访问网线不能在主线程中进行
+
+我的参考资料：
+
+	http://www.oschina.net/question/1764894_246656?fromerr=ZElwOffs
+	老师给的源代码
+
+recyclerView 和cartView的导入方法
+
+	别人的都是：
+		compile 'com.android.support:recyclerview-v7:23.4.0'
+       		compile 'com.android.support:cardview-v7:23.4.0'
+
+	但是我的自动添加是这样的：
+		compile 'com.android.support:recyclerview-v7:24.0.0 -beat'
+       		compile 'com.android.support:cardview-v7:24.0.0 -beat'
+		但是就算这样也是不成功的
+
+	我的只能这样写：	
+		compile 'com.android.support:recyclerview-v7:21.+'
+    		compile 'com.android.support:cardview-v7:21.+'
+
+ RecyclerView的使用
+
+　　1页面布局
+     <android.support.v7.widget.RecyclerView
+         android:id="@+id/rcView"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         />
+
+　　2初始化控件
+	RecyclerView rcView;
+ 	rcView = (RecyclerView) this.findViewById(R.id.rcView);
+
+　　3给它数据（图片、文字等等）
+    List<Integer> imageUrls;
+    Integer[] imgs ={
+            R.drawable.happy1,R.drawable.happy2,R.drawable.happy3,R.drawable.happy4,
+            R.drawable.happy5,R.drawable.happy6,R.drawable.happy7,R.drawable.happy8
+    };
+        imageUrls = new ArrayList<>();
+        imageUrls.addAll(Arrays.asList(imgs));
+
+　　4适配器
+   public class MyApdater extends RecyclerView.Adapter<MyApdater.MyViewHolder> {
+
+    private Context context;
+    private LayoutInflater inflater;
+    private List<Integer> imageList;
+    private OnItemClickListener itemClickListener;
+    public interface OnItemClickListener{
+        void onItemClick(View view, int position);
+    }
+
+
+    public void setOnItemClickListener(OnItemClickListener itemClickListener){
+        this.itemClickListener = itemClickListener;
+    }
+
+
+    public MyApdater(Context context, List<Integer> imageList) {
+        this.context = context;
+        this.imageList = imageList;
+        inflater = LayoutInflater.from(context);
+        setHasStableIds(true);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new MyViewHolder(inflater.inflate(R.layout.list_item,parent,false));
+    }
+
+    @Override
+    public int getItemCount() {
+        return imageList.size();
+    }
+
+    @Override
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+        int e = imageList.get(position);
+        holder.img_item.setImageResource(e);
+//        x.image().bind(holder.img_item,imageList.get(position),options);
+        /*if(itemClickListener != null){
+            holder.img_item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+//                    int pos = holder.getPosition();  //获取当前Item的postion
+                    itemClickListener.onItemClick(holder.img_item,position);
+                }
+            });
+        }*/
+    }
+
+
+
+
+    class MyViewHolder extends RecyclerView.ViewHolder{
+        private ImageView img_item;
+        public MyViewHolder(View itemView) {
+            super(itemView);
+            img_item = (ImageView) itemView.findViewById(R.id.img_item);
+        }
+    }
+}
+
+　　5素材xml
+
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="10dp"
+    android:orientation="horizontal"
+    card_view:cardBackgroundColor="#EEEEEE"
+    card_view:cardCornerRadius="5dp">
+
+    <ImageView
+        android:src="@drawable/happy1"
+        android:id="@+id/img_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</android.support.v7.widget.CardView>
+
+　　6在MainActivity中使用适配器
+    MyApdater myApdater;
+        myApdater = new MyApdater(this,imageUrls);
+        rcView.setAdapter(myApdater);
+
+　　7设置RecyclerView的动画、显示等效果
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+        rcView.setItemAnimator(new DefaultItemAnimator());
+        //rcView.addItemDecoration();
+        rcView.setLayoutManager(layoutManager);
+　
+
+附：MainActivity全代码、
+package com.firefly.recyclerview;
+
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class MainActivity extends ActionBarActivity {
+    RecyclerView rcView;
+    MyApdater myApdater;
+    List<Integer> imageUrls;
+    Integer[] imgs ={
+            R.drawable.happy1,R.drawable.happy2,R.drawable.happy3,R.drawable.happy4,
+            R.drawable.happy5,R.drawable.happy6,R.drawable.happy7,R.drawable.happy8
+    };
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initData();
+        init();
+    }
+
+    private void init() {
+
+        rcView = (RecyclerView) this.findViewById(R.id.rcView);
+        //GridLayoutManager layoutManager = new GridLayoutManager(this,2);
+        //LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        //layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+        rcView.setItemAnimator(new DefaultItemAnimator());
+        //rcView.addItemDecoration();
+        rcView.setLayoutManager(layoutManager);
+        myApdater = new MyApdater(this,imageUrls);
+        rcView.setAdapter(myApdater);
+     /*   myApdater.setOnItemClickListener(new MyApdater.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(MainActivity.this, position + " click", Toast.LENGTH_SHORT).show();
+                imageUrls.remove(position);
+                myApdater.notifyItemRemoved(position);
+            }
+        });*/
+
+
+    }
+
+    protected void initData()
+    {
+        imageUrls = new ArrayList<>();
+        imageUrls.addAll(Arrays.asList(imgs));
+    }
+
+
+
+
+}
+
+
+
+
+
+

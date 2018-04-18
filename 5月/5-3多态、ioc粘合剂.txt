@@ -1,0 +1,113 @@
+静态多态与动态多态
+	重写	重载
+重写：覆盖，必须在有继承的前提下
+重载：在同一作用域中，方法名相同且形参列表（类型不同也算）不同
+
+静态多态：在调用的时候会知道用的是哪个
+动态多态：
+	//前提：
+		1发生了方法的重写；
+		2发生了引用的转换（向上转型）
+			向上转型：通过的引用，指向的子类的实体
+	
+	UFO和Jet都是继承自Fly
+	Fly fly = new Jet();
+	fly.fly();
+	此时追踪到的是Fly的fly方法，但是实际上用的是Jet的fly方法。
+
+
+
+SpringMVC
+	ioc粘合剂
+	硬编码（当发生需求改变的时候，需要修改java代码才能得到你想要的效果，如果运行在服务器的话还要重启服务器）
+
+	所以，ioc控制反转，将对象的初始化控制权交给配置文件，而不是java代码
+		
+	ioc只需要添加核心，但是最好还是将oop和web一同添加
+
+
+	在xml文件中：
+		<beans>内容都填在这里<beans/>
+		内容：
+			<bean id = "stu1" class = "包名+类名">上同</bean>
+				<property name = "age" value = "21"></>
+					如果要引用用ref
+
+	在java文件中怎样读取配置文件
+	ApplicationContext app = new ClassPathXmlApplicationContext("文件名");
+	Student stu1 = (Student)app.getBean("stu1");
+	sysout();
+	
+
+	在对象中set和get方法 及toString
+	
+	在配置文件中多写文件，在java中少写
+	解藕合
+
+
+。。。。怎么写不出来。。。
+
+
+
+android网络获取
+1.新建java工程，写一个socket工程
+2.serverSocket server = new 新建(端口);
+3.接收（监听）
+	sysout(服务已开启，等待连接)
+	server.accept();
+	sysout(client.getInternetAddress()+连接成功)
+4.在android中连接
+	Socket cliient = new Socket("192.168.X.X",端口);
+	Log.v("tag","连接成功");
+	把上面两行写入线程
+		new Thread(){
+			public void run(){
+				代码
+	但是不能在子线程中写主线程的UI，例如，就算想在这里进行Toast都是不行的，要么用Handler，要么用异步任务类
+			}
+		}.start();
+5.在java中接收信息（发来的信息）：
+	新建Client
+	Socket client = server.accept();//接上文的返回值
+	新建线程
+		while(true){
+			//字节流获取
+			InputStream is = client.getInputStream();
+			//用字符流读,用BufferedReader		包装（通过转型）
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			//可以直接读一行..........
+			String msg = br.readLine();
+		}
+6.在android中发送信息
+	String message = "hello";
+	OutputStream os = client.getOutputStream();
+	PrintWriter pw = new PrintWriter(os.true);//os.true相当于autoflush
+	//转码
+	message = URLEncoder.encode(message,"UTF-8");写了解码转码可能就不需要了。
+	//解码
+	message = URLDecode.decode(message,"UTF-8");
+	pw.println("客户端说："+message);
+
+如果想用字节操作字符：ByteArrayOutputStream粘合剂，把字符粘合在一起
+FileInputStream		文件
+FileReader		文本
+BufferedReader
+ByteArrayOutputStream
+printWriter
+InputStreamReader
+
+区别输入和输出：
+	获得、读取：输入流InputStream、reader
+	写入、存放：输出流OutputStream、writer
+
+区别字符和字节：
+	reader、writer
+	stream
+
+
+
+
+
+
+怎样让try catch之后的报错显示颜色
+log.e("tag","报错",e);

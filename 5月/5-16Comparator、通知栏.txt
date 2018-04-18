@@ -1,0 +1,216 @@
+1.Comparator实现排序
+	public class StepComparator implements Comparator<File>{
+     		//如果o1小于o2,返回一个负数;如果o1大于o2，返回一个正数;如果他们相等，则返回0;
+    		@Override
+		public int compare(File lhs, File rhs) {
+			//compareTo:比较字符串，相等为0，大于>0，小于<0
+			return lhs.getName().compareTo(rhs.getName());
+		}
+	}
+
+2.使用System.arraycopy()实现数组之间的复制
+	System提供了一个静态方法arraycopy(),我们可以使用它来实现数组之间的复制。
+	其函数原型是： public static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length) 
+		src:源数组； srcPos:源数组要复制的起始位置； 
+		dest:目的数组； 
+		destPos:目的数组放置的起始位置； 
+		length:复制的长度。 
+	注意：src and dest都必须是同类型或者可以进行转换类型的数组． 
+	有趣的是这个函数可以实现自己到自己复制。
+	比如： 
+		int[] fun ={0,1,2,3,4,5,6}; 
+		System.arraycopy(fun,0,fun,3,3); 
+	则结果为：
+		{0,1,2,0,1,2,6}; 
+	实现过程是这样的：
+		先生成一个长度为length的临时数组,
+		将fun数组中srcPos 到srcPos+length-1之间的数据拷贝到临时数组中，
+		再执行System.arraycopy(临时数组,0,fun,3,3).
+
+3.listView中滑到顶部
+	listView.setSelection(0)：直接跳到顶部
+	listView.smoothScrollToPosition(0)：平滑滚动到顶部
+
+4.ListView的加载优化ViewHolder
+    getview的加载方法一般有以下三种种方式：
+	1.最慢的加载方式是每一次都重新定义一个View载入布局，再加载数据
+		public View getView(int position, View convertView, ViewGroup parent) {
+ 			View item = mInflater.inflate(R.layout.list_item_icon_text, null);
+ 			((TextView) item.findViewById(R.id.text)).setText(DATA[position]);
+ 			((ImageView) item.findViewById(R.id.icon)).setImageBitmap((position & 1) == 1 ? mIcon1 : mIcon2);
+ 			return item;
+		}
+	2.正确的加载方式是当convertView不为空的时候直接重新使用convertView从而减少了很多不必要的View的创建，然后加载数据
+		public View getView(int position, View convertView, ViewGroup parent) {
+ 			if (convertView == null) {
+ 				convertView = mInflater.inflate(R.layout.item, parent, false);
+			}
+ 			((TextView) convertView.findViewById(R.id.text)).setText(DATA[position]);
+ 			((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap((position & 1) == 1 ? mIcon1 : mIcon2);
+ 			return convertView;
+ 		}
+	3.最快的方式是定义一个ViewHolder，将convetView的tag设置为ViewHolder,不为空时重新使用即可
+		static class ViewHolder {
+			TextView text;
+			ImageView icon;
+		}
+ 
+		public View getView(int position, View convertView, ViewGroup parent) {
+ 			ViewHolder holder;
+ 
+ 			if (convertView == null) {
+ 				convertView = mInflater.inflate(R.layout.list_item_icon_text,parent, false);
+ 				holder = new ViewHolder();
+ 				holder.text = (TextView) convertView.findViewById(R.id.text);
+ 				holder.icon = (ImageView) convertView.findViewById(R.id.icon);
+ 				convertView.setTag(holder);//初始化后setTag
+			} else {
+				holder = (ViewHolder) convertView.getTag();//再次使用时getTag
+			}
+			holder.text.setText(DATA[position]);
+			holder.icon.setImageBitmap((position & 1) == 1 ? mIcon1 : mIcon2);
+			return convertView;
+		}
+
+5.ListView的优化
+	5-1.复用已经生成的convertView；
+	5-2.添加viewHolder类；
+	5-3.缓存数据（图片缓存）；
+	5-4.分页加载。
+	
+6.lastIndexOf(".")
+	public int lastIndexOf(String str): 
+	如果出现字符串参数一次或多次与该对象内的子字符串，则返回最后一个这样的字符串的第一个字符的索引返回。如果不出现作为一个子串，则返回-1。
+	参考网址：http://www.yiibai.com/java/java_string_lastindexof.html
+
+7.转换为大/小写
+	toUpperCase：将所有的英文字符转换为大写字母
+	toLowerCase：将所有的英文字符转换为小写字母
+
+8.subString()
+	subString(int index):
+		从你给的位置开始，一直截取到末取（注意下标和位数有1位的偏差）
+	subString(int index,int index1)
+		从index截取到index1
+
+9.使用getIdentifier()获取资源Id
+    使用getIdentifier()方法可以方便的获各应用包下的指定资源ID。
+    主要有两种方法：
+	9-1：方式一
+		Resources resources = context.getResources();
+		int indentify = resources.getIdentifier(org.loveandroid.androidtest:drawable/icon",null,null);
+		if(indentify>0){
+			icon = resources.getDrawable(indentify);
+		}
+	参数格式：
+		包名 + : + 资源文件夹名 + / +资源名；是这种格式 然后其他的可以为null
+
+	9-2：方式二
+		Resources resources = context.getResources();
+		int indentify= getResources().getIdentifier("icon", "drawable", "org.anddev.android.testproject");
+	参数格式：
+		第一个参数为ID名，第二个为资源属性是ID或者是Drawable，第三个为包名。  
+
+	9-3：结果
+		如果找到了，返回资源Id，如果找不到，返回0 。
+
+	9-4：例
+		int resId = getResources().getIdentifier(type, "drawable" , getPackageName());
+
+10.android 打开各种文件（setDataAndType）
+	10-1：java代码（打开文件）
+		Intent intent = new Intent(); 
+    		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+    		//设置intent的Action属性 
+    		intent.setAction(Intent.ACTION_VIEW); 
+    		//获取文件file的MIME类型 
+    		String type = getMIMEType(file); 
+    		//设置intent的data和Type属性。 
+    		intent.setDataAndType(/*uri*/Uri.fromFile(file), type); 
+    		//跳转 
+    		startActivity(intent);
+
+	10-2：参考网址：http://zengyan2012.iteye.com/blog/1646492
+
+12.通知消息的发送
+	12-1：消息管理者
+		NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+	12-2：下面是点击通知之后的操作，即进行另一个页面
+		intent.setClass(NoticeActivity.this, NotificationActivity.class);
+	12-3：消息意图（可延迟的）
+		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+	12-4：新建消息	
+		Notification notification = new Notification(R.drawable.ic_launcher,"内容",System.currentTimeMillis());
+	12-5：设置消息的内容
+		notification.setLatestEventInfo(NoticeActivity.this, "还要什么标题啊。。", "嗯", pi);
+	12-6：设置它的可取消性与否
+		可滑动取消：
+			notify.flags=Notification.FLAG_AUTO_CANCEL;
+		不可滑动取消：
+			notify.flags=Notification.FLAG_NO_CLEAR
+	12.7：设置声音
+		系统自带的声音：
+			notification.sound = Uri.withAppendedPath(Audio.Media.INTERNAL_CONTENT_URI, "6"); 
+		默认的声音：
+			notify.defaults=Notification.DEFAULT_SOUND;
+		自定义声音
+			notify.sound = Uri.parse("file:///sdcard/notification/ringer.mp3"); 
+		当用户响应后声音和会结束：
+		notification.flags |= notification.FLAG_INSISTENT; 
+	12-8：添加振动
+		默认：
+			notification.defaults |= Notification.DEFAULT_VIBRATE;  
+		当然也可以自己定义振动形式，这边需要用到Long型数组
+			long[] vibrate = {0,100,200,300};  
+			notification.vibrate = vibrate;
+		权限：
+			<uses-permission android:name="android.permission.VIBRATE"/>  
+	12-9：添加灯光
+		默认的灯光：
+			notification.defaults |= Notification.DEFAULT_LIGHTS;
+		自定义：
+			notification.ledARGB = 0xff00ff00;  
+			notification.ledOnMS = 300;  
+			notification.ledOffMS = 1000;  
+			notification.flags |= Notification.FLAG_SHOW_LIGHTS; 
+			其中ledARGB 表示灯光颜色、 ledOnMS 亮持续时间、ledOffMS 暗的时间。
+			注意：这边的颜色跟设备有关，不是所有的颜色都可以，要看具体设备。
+	12-10：开始通知
+		manager.notify(1,notification);
+	12-11：方法二：
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+		builder.setSmallIcon(R.drawable.ic_launcher)
+		.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
+		.setTicker("有您的新通知")
+		.setWhen(System.currentTimeMillis())
+		.setContentTitle("这是标题")
+		.setContentText("这是内容")
+		.setContentInfo("AA")//设置右下角的内容
+		.setContentIntent(pi)
+		.setNumber(1)
+		.setAutoCancel(true);
+		Notification notif = builder.build();
+		manager.notify(2,notif);
+	12-12：自定义：
+		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+		PendingIntent pi2 = PendingIntent.getActivity(this, 0, new Intent(this,MainActivity.class), 0);
+	
+		RemoteViews rv = new RemoteViews(getPackageName(),R.layout.music_notify);
+		rv.setOnClickPendingIntent(R.id.iv_icon_notify, pi);
+		rv.setOnClickPendingIntent(R.id.tv_text_notify, pi2);
+		rv.setTextViewText(R.id.tv_text_notify, "这这这这这这。。。。。");
+		
+		NotificationCompat.Builder b = new NotificationCompat.Builder(this);
+		b.setSmallIcon(R.drawable.ic_launcher).setTicker("有您的通知").setWhen(System.currentTimeMillis()).setContent(rv);
+		Notification n = b.build();
+		manager.notify(3,n);
+
+
+
+
+
+
+
+
+
+

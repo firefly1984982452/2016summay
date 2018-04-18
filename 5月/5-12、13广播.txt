@@ -1,0 +1,83 @@
+BoradCast广播
+1、接受广播 BroadCastReceiver(接收系统的广播)
+	1-1：电话的广播
+		1-1-1：拨打电话的广播
+			1.创建一个类，继承BoradcastReceiver
+			2.重写它的onReceive方法
+			3.在AndroidManifest.xml中注册广播
+				<receiver android:name="com.style.boradcast.PhoneBoradCastReceiver">
+					<intent-filter >
+		    				<!-- 设置接受的频道 ：电话拨出的频道-->
+		    				<action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
+					</intent-filter>
+				</receiver>
+			4.添加权限：
+				<!-- 监听拨出电话的状态的权限 -->
+				<uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS" />
+
+     		1-1-2：接收电话的广播
+			频道：<action android:name="android.intent.action.PHONE_STATE"/>
+			权限：<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+        		电话管理者：
+			TelephonyManager m = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+			TelephonyManager.CALL_STATE_RINGING://响铃
+			TelephonyManager.CALL_STATE_IDLE://挂断
+			TelephonyManager.CALL_STATE_OFFHOOK://接听中
+			获取来电号码：String number = intent.getStringExtra("incoming_number");
+
+	1-2：短信的广播
+      		频道：<action android:name="android.provider.Telephony.SMS_RECEIVED" />
+      		权限：<uses-permission android:name="android.permission.SEND_SMS" />
+		      <uses-permission android:name="android.permission.RECEIVE_SMS" />
+      		获取短信：Object[] objs = (Object[]) intent.getExtras().get("pdus");      
+      		短信管理器：SmsManager manager = SmsManager.getDefault();//获取我们的短息管理器
+      		短信发送：manager.sendTextMessage("15116346673", null,sMessage.getMessageBody(),null,null);
+
+
+
+2、发送广播
+	有序：sendOrderedBroadcast(intent,null);
+	无序：sendBroadcast(intent);
+
+3、广播（有序+无序广播）
+	http://blog.csdn.net/ljb_blog/article/details/8650705
+	有序：
+		按照顺序持续的向下广播：先后顺序（如果有优先级，高者先得，如果没有，按注册的顺序来）
+		有序广播可以中断和修改广播的数据
+	无序：
+		不保证传播的接收到广播的先后顺序
+		不能中断和修改广播的内容
+		一般自带的电话和短信监听就是这样（不推荐使用）
+
+4、静态注册广播和动态注册广播
+	静态注册：
+		如上。
+	动态注册：
+		MyReceiver myReceiver = new MyReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("android.firefly.test");
+		filter.setPriority(5000);
+		registerReceiver(myReceiver,filter);
+	取消：
+		unregisterReceiver(myReceiver);
+
+5.自己的广播
+    	假设在按钮下进行：
+	    public void Sure(View v){
+		Intent i = new Intent();
+		i.setAction("com.firefly.BroadCast");
+		i.putExtra("abc", "这里是传值过去的内容");
+		sendOrderedBroadcast(i,null);
+	    }
+	频道：
+		<action android:name="com.firefly.BroadCast" />
+	新建一个类，继承BroadCast
+		if (intent.getAction().equals("com.firefly.BroadCast")) {
+			String str = intent.getStringExtra("abc");
+			Toast.makeText(context, "My:"+str, 0).show();
+			//中断（如果有序广播，会成功，无序则会报错）
+			abortBroadcast();
+			//如果要改值，只能这样
+			String data = "有毒！";
+			setResultData(data);
+		}

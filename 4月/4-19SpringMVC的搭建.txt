@@ -1,0 +1,17 @@
+1、解决请求乱码问题、解决响应乱码问题
+	request.setCharacterEncoding("UTF-8");
+	response.setCharacterEncoding("UTF-8");
+	response.setContentType("text/html;character=uft-8");
+
+2、SpringMVC的搭建
+	新建WEB项目
+	添加Spring支持
+		AOB和WEB Libiray
+
+
+	新建页面 ok.jsp
+	修改字符码 UTF-8
+	在<body>中写内容===随便写
+	
+	return "ok";
+	

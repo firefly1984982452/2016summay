@@ -1,0 +1,45 @@
+1、申请拿到数据
+	可以用“聚合数据”
+
+2、在android studio中导入需要的jar包
+	复制—>app—>libs—>粘贴—>右击—>Add As Library……—>选择model—>ok
+	此项目所用的jar包建议：
+		fastjson
+		xUtils(访问部分可用异步任务jar包代替)
+
+3、网络权限
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></uses-permission>
+
+4、获取数据
+	4-1：携带参数
+		RequestParams params = new RequestParams();
+        	params.addBodyParameter("key", "你的key值");
+        	params.addBodyParameter("cityname", "城市名");
+	4-2：获取
+        	HttpUtils http = new HttpUtils();
+        	http.send(HttpRequest.HttpMethod.POST, "请求的网址", params, new RequestCallBack<String>() {
+            		@Override
+            		public void onSuccess(ResponseInfo<String> responseInfo) {
+                		String info = responseInfo.result;
+            		}
+
+            		@Override
+            		public void onFailure(HttpException e, String s) {
+                		Toast.makeText(MainActivity.this, "网络连接失败", Toast.LENGTH_SHORT).show();
+            		}
+       		});
+
+5、解析数据
+	获取到的数据默认是json数据，用android studio的gsonformat一键生成实体类，再用parcelable序列化它（想要观看效果最佳，也可以重写toString方法）
+	WeatherInfo就是自动生成的实体类
+	WeatherInfo wea = JSON.parseObject(info, WeatherInfo.class);
+        String weather = new WeatherInfo();
+
+6、适配数据
+	新建一个Adapter，用ViewHolder优化它	
+	新建item_layout，给数据一个模板
+	在Activity中就能用了
+                list= wea.getResult().getData().getWeather();
+                adapter = new WeatherAdaper(MainActivity.this, list);
+                lv.setAdapter(adapter);

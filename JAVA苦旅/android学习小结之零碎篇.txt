@@ -1,0 +1,831 @@
+﻿1.ActionBar标题栏菜单
+	1-1：在menu文件夹中新建xml文件
+	1-2：<menu>
+		<item android:id = "@+id/share"
+			android:title = "分享"/>
+		//二级菜单：
+		<item android:title="更多">
+			<menu>
+				<group>
+					<item>……
+				</group>
+			</menu>
+		</item>
+
+=============================================================
+======================05:27 2016/5/3=========================
+=============================================================
+
+
+2.android的IO操作之存文件到SD卡
+		// 新建此文件夹
+		File fileFolder = new File(photoPath);
+		if (!fileFolder.exists() && !fileFolder.isDirectory()) {
+			fileFolder.mkdirs();
+		}
+		// 新建此文件
+		outputImage = new File(fileFolder, name + ".jpg");
+
+3.欢迎页
+	3-1：全屏（去掉标题栏）：requestWindowFeature(1);
+	3-2：xml页面：写背景图和要渐显的图片（文字）
+	3-3：在Activity代码中绑定要渐显的图片
+	3-3：
+	protected void onStart() {		
+		super.onStart();
+		satrtAni();
+	}
+	
+	private void satrtAni(){
+		AlphaAnimation aa = new AlphaAnimation(0.0f, 1.0f);
+		aa.setDuration(3000);
+		imagelogo.setAnimation(aa);
+		aa.setAnimationListener(new AnimationListener() {
+			onAnimationStart()略
+			onAnimationRepeat()略
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+	}
+
+4.Spinner
+	4-1:xml页面
+	4-2:数据
+	4-3:适配，和其它的控件一样的。。。
+
+5.Gallery
+	5-1:适配
+		注意：如果想要循环就要设置
+			int picId = imgs[position%imgs.length];
+			iv.setImageResource(picId);
+	5-2:点击时显示大图
+		//找到显示大图的控件
+		final ImageView showImg = (ImageView) findViewById(R.id.showImg);
+		gallery.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				// view是当前选择项pic_item最外层的控件Linearlayout，parent就是gallery本身
+				ImageView itemImageView = (ImageView) view.findViewById(R.id.iv_pic);
+				//设置当前项不透明
+				itemImageView.setAlpha(1.0f);
+				//获取当前选择的图片
+				int resId = imgs[position%imgs.length];
+				//设置大图图片
+				showImg.setImageResource(resId);
+				//设置大图的淡入淡出效果
+				AlphaAnimation aa = new AlphaAnimation(0.0f, 1.0f);
+				aa.setDuration(1000);//设置切换的时间，毫秒
+				showImg.startAnimation(aa);
+				for (int i = 0; i < parent.getChildCount(); i++) {
+					LinearLayout layout = (LinearLayout)parent.getChildAt(i);
+					ImageView iv = (ImageView) layout.findViewById(R.id.iv_pic);
+					if(iv!=itemImageView){
+						iv.setAlpha(0.3f);
+						//给滤镜
+			//			iv.setColorFilter(Color.parseColor("#99c5c5c0"));
+					}
+				}
+			}
+			
+
+6.批量获取图片（前提是图片名为a1,a2……）
+	final int[] imgs = new int[16];
+	//获取s1~s16资源
+		for (int i = 0; i < imgs.length; i++) {
+		String name = "s"+(i+1);
+		//在这里会有try catch
+		imgs[i] = cls.getField(name).getInt(null);
+	}
+
+7.多选框
+	ChickBox  cb = ...
+	String jz_ = null;
+	if (jz.isChecked()) {
+		jz_ = "剪纸";
+	}
+
+
+8.单选
+        <RadioGroup
+            android:id="@+id/sex"
+            android:checkedButton="@+id/female">
+	        <RadioButton
+	            android:id="@+id/male"
+	            android:text="男" />	
+	        <RadioButton
+	            android:id="@+id/female"
+	            android:text="女"/>	
+	 </RadioGroup>
+	//设置它的点击监听事件
+		sex.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				String gender = ((RadioButton) findViewById(checkedId)).getText().toString();
+				Toast.makeText(RegistActivity.this, gender, Toast.LENGTH_SHORT).show();
+			}
+		});
+
+8.信息中的操作
+	8-1：直接打电话
+		btn_call.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ss.setSpan(new ClickableSpan() {
+					
+					@Override
+					public void onClick(View widget) {
+						Intent intent = new Intent(Intent.ACTION_CALL,Uri.parse("tel:15111423714"));
+						startActivity(intent);
+					}
+				}, msg.indexOf("拨打电话"), msg.indexOf("拨打电话")+4, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+				et_message.setText(ss);
+			}
+		});
+		
+	8-2：打开拨号盘
+		btn_phone.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ss.setSpan(new ClickableSpan() {
+					public void onClick(View widget) {
+						Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:15111423714"));
+						startActivity(intent);
+					}
+				}, msg.indexOf("拨打电话"), msg.indexOf("拨打电话")+4, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+				et_message.setText(ss);
+			}
+		});
+		
+	8-3：打开浏览器
+		btn_browser.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ss.setSpan(new ClickableSpan() {
+					public void onClick(View widget) {
+						Intent i  =new Intent(Intent.ACTION_VIEW,Uri.parse("http://www.baidu.com"));
+						startActivity(i);
+					}
+				}, msg.indexOf("官网"), msg.indexOf("官网")+2, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+				et_message.setText(ss);
+			}
+		});
+		//要想自定义的动作有效，需要添加如下信息
+		et_message.setMovementMethod(LinkMovementMethod.getInstance());
+
+	8-4：点击“插入表情”按钮之后	
+		insert_message.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				//获取插入点
+				int end = et_message.getSelectionEnd();
+				//获取图片
+				Drawable qq = getResources().getDrawable(R.drawable.cyddz);
+				//设置图片
+				qq.setBounds(0, 0, qq.getIntrinsicWidth(), qq.getIntrinsicHeight());
+				//把图片转换成字符串
+				SpannableString ss = new SpannableString("qq");
+				//替换
+				ss.setSpan(new ImageSpan(qq), 0, ss.length(), SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+				//插入
+				et_message.getText().insert(end, ss);
+			}
+		});
+				
+9.自动提示
+	<MultiAutoCompleteTextView 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:id="@+id/mul_tv"/>
+
+	//设置输入几个之后自动提示，默认为2，这里改为1
+	auto_tv.setThreshold(1);
+	mul_tv.setTokenizer(new CommaTokenizer());											//								布局文件	数据源的数据显示在哪里
+	ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this, R.layout.text_item, R.id.tv_text_item, objects);
+	mul_tv.setAdapter(adapter2);
+
+10.直接发短信（不用经过用户同意）
+	SmsManager smsMgr = SmsManager.getDefault();
+	smsMgr.sendTextMessage("15111423714", null, name+":"+phoneNumber, null, null);
+
+11.获取用户手机联系人
+	11-1：获取权限：
+		<!-- 发送短信的权限 -->
+		<uses-permission android:name="android.permission.SEND_SMS"/>
+	11-2：拿到联系人信息
+		Uri uri = ContactsContract.Contacts.CONTENT_URI;
+		Uri uriPhone = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+		Uri uriEmail = ContactsContract.CommonDataKinds.Email.CONTENT_URI;
+	11-3：创建一个联系人类
+		int c_id;
+		String c_name;
+		String c_phone;
+		String c_email;
+		写入它的构造方法和get、set方法
+	11-4：创建内容解析器
+		// ContentResolver是内容解析器
+		ContentResolver resolver = this.getContentResolver();
+	11-5：解析
+		//定义邮标：下面一直在嵌套循环，这层是获取数据
+		Cursor cursor = resolver.query(uri, null, null, null, null);
+		int contactIdIndex = 0;
+		int nameIndex = 0;
+		if(cursor.getCount()>0){
+			contactIdIndex = cursor.getColumnIndex(ContactsContract.Contacts._ID);
+			nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+		}
+		while(cursor.moveToNext()){
+			String contactId = cursor.getString(contactIdIndex);
+			name = cursor.getString(nameIndex);
+			
+			//这层控制电话号码
+			Cursor phones = this.getContentResolver().query(uriPhone,
+					null, ContactsContract.CommonDataKinds.Phone.CONTACT_ID + "=" +contactId, null, null);
+			int phoneIndex = 0;
+			if(phones.getCount()>0){
+				phoneIndex = phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+			}
+			while(phones.moveToNext()){
+				phoneNumber = phones.getString(phoneIndex);
+				
+				//这层控制邮箱	
+				String selectionEmail = ContactsContract.CommonDataKinds.Email.CONTACT_ID +"="+contactId;
+				Cursor email = this.getContentResolver().query(uriEmail, null, selectionEmail, null, null);
+				int emailIndex = 0;
+				if(email.getCount()>0){
+					emailIndex = email.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+				}
+				while (email.moveToNext()) {
+					Email = email.getString(emailIndex);					
+				}
+				
+			}
+		}
+
+12.通知消息的发送
+	12-1：消息管理者
+		NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+	12-2：下面是点击通知之后的操作，即进行另一个页面
+		intent.setClass(NoticeActivity.this, NotificationActivity.class);
+	12-3：消息意图（可延迟的）
+		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+	12-4：新建消息	
+		Notification notification = new Notification(R.drawable.ic_launcher,"内容",System.currentTimeMillis());
+	12-5：设置消息的内容
+		notification.setLatestEventInfo(NoticeActivity.this, "还要什么标题啊。。", "嗯", pi);
+	12-6：设置它的可取消性与否
+		可滑动取消：
+			notify.flags=Notification.FLAG_AUTO_CANCEL;
+		不可滑动取消：
+			notify.flags=Notification.FLAG_NO_CLEAR
+	12.7：设置声音
+		系统自带的声音：
+			notification.sound = Uri.withAppendedPath(Audio.Media.INTERNAL_CONTENT_URI, "6"); 
+		默认的声音：
+			notify.defaults=Notification.DEFAULT_SOUND;
+		自定义声音
+			notify.sound = Uri.parse("file:///sdcard/notification/ringer.mp3"); 
+		当用户响应后声音和会结束：
+		notification.flags |= notification.FLAG_INSISTENT; 
+	12-8：添加振动
+		默认：
+			notification.defaults |= Notification.DEFAULT_VIBRATE;  
+		当然也可以自己定义振动形式，这边需要用到Long型数组
+			long[] vibrate = {0,100,200,300};  
+			notification.vibrate = vibrate;
+		权限：
+			<uses-permission android:name="android.permission.VIBRATE"/>  
+	12-9：添加灯光
+		默认的灯光：
+			notification.defaults |= Notification.DEFAULT_LIGHTS;
+		自定义：
+			notification.ledARGB = 0xff00ff00;  
+			notification.ledOnMS = 300;  
+			notification.ledOffMS = 1000;  
+			notification.flags |= Notification.FLAG_SHOW_LIGHTS; 
+			其中ledARGB 表示灯光颜色、 ledOnMS 亮持续时间、ledOffMS 暗的时间。
+			注意：这边的颜色跟设备有关，不是所有的颜色都可以，要看具体设备。
+	12-10：开始通知
+		manager.notify(1,notification);
+	12-11：方法二：
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+		builder.setSmallIcon(R.drawable.ic_launcher)
+		.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher))
+		.setTicker("有您的新通知")
+		.setWhen(System.currentTimeMillis())
+		.setContentTitle("这是标题")
+		.setContentText("这是内容")
+		.setContentInfo("AA")//设置右下角的内容
+		.setContentIntent(pi)
+		.setNumber(1)
+		.setAutoCancel(true);
+		Notification notif = builder.build();
+		manager.notify(2,notif);
+	12-12：自定义：
+		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+		PendingIntent pi2 = PendingIntent.getActivity(this, 0, new Intent(this,MainActivity.class), 0);
+	
+		RemoteViews rv = new RemoteViews(getPackageName(),R.layout.music_notify);
+		rv.setOnClickPendingIntent(R.id.iv_icon_notify, pi);
+		rv.setOnClickPendingIntent(R.id.tv_text_notify, pi2);
+		rv.setTextViewText(R.id.tv_text_notify, "这这这这这这。。。。。");
+		
+		NotificationCompat.Builder b = new NotificationCompat.Builder(this);
+		b.setSmallIcon(R.drawable.ic_launcher).setTicker("有您的通知").setWhen(System.currentTimeMillis()).setContent(rv);
+		Notification n = b.build();
+		manager.notify(3,n);
+
+13.HeadView
+	13-1:找到HeadView并给它打气
+		headView = LayoutInflater.from(this).inflate(R.layout.adapter_detail_heater, null);
+	13-2：把它里面的控件找出来
+		cookName = (TextView) headView.findViewById(R.id.cookNameDetail);
+		cookIntro = (TextView)headView.findViewById(R.id.cookIntroDetail);
+		……
+	13-3：在使用适配器之前添加它
+		lv.addHeaderView(headView);
+
+=============================================================
+======================00:25 2016/5/9=========================
+=============================================================
+
+14.屏幕刷新
+	常用于启动页面的进度条刷新， 其他页面慎用
+	new Handler().postDelayed(new Runnable() {
+   	@Override
+   	public void run() {
+		startActivity(new Intent(Appstart.this,Welcome.class));
+		finish();
+   	 }
+  	}, 800);
+
+15.跳到外网
+    	Uri uri = Uri.parse("http://www.baidu.com"); 
+    	startActivity(new Intent(Intent.ACTION_VIEW, uri));
+
+16.format="reference"
+	作用：reference：参考某一资源ID
+	使用：style="?android:attr/progressBarStyleLarge"
+
+17.Context还可以这样写，
+	Toast.makeText(getApplicationContext(), "也是可以的哈", 0).show();
+
+18.将Activity设置为透明
+	方法一：
+		Android:theme="@android:style/Theme.Translucent"
+	方法二：
+	18-1：清单文件：
+		<activity
+            	android:name="com.firefly.studyself.LoadingActivity"
+            	android:theme="@style/MyDialogStyle" >
+        	</activity>
+	18-2：String.xml文件
+		<style name="MyDialogStyle">
+        		<item name="android:windowBackground">@android:color/transparent</item>
+			……
+   	 	</style>
+
+19.darwable中各种大小的区别：
+	(1)drawable-hdpi里面存放高分辨率的图片,如WVGA (480x800),FWVGA (480x854)
+	(2)drawable-mdpi里面存放中等分辨率的图片,如HVGA (320x480)
+	(3)drawable-ldpi里面存放低分辨率的图片,如QVGA (240x320)
+	ldpi：240x320
+	mdpi：320x480
+	hdpi：480x800、480x854
+	xhdpi：至少960*720
+	xxhdpi：1280×720
+
+20.Environment 常用方法： 
+	* 方法：getDataDirectory()
+	解释：返回 File ，获取 Android 数据目录。
+	* 方法：getDownloadCacheDirectory()
+	解释：返回 File ，获取 Android 下载/缓存内容目录。
+	* 方法：getExternalStorageDirectory()
+	解释：返回 File ，获取外部存储目录即 SDCard
+	* 方法：getExternalStoragePublicDirectory(String type)
+	解释：返回 File ，取一个高端的公用的外部存储器目录来摆放某些类型的文件
+	* 方法：getExternalStorageState()
+	解释：返回 File ，获取外部存储设备的当前状态
+	* 方法：getRootDirectory()
+	解释：返回 File ，获取 Android 的根目录
+	来自 <http://blog.csdn.net/chengyingzhilian/article/details/7833967> 
+
+21.获取当前时间：
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+	Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
+	String str = "six"+formatter.format(curDate);
+
+22.在ViepPager中强制给textview换背景色
+	tv1.setBackgroundColor(Color.parseColor("#cc44ec"));
+
+23.动画动作
+        	AnimationSet anim = new AnimationSet(true);
+		TranslateAnimation mytranslateanim = new TranslateAnimation(int fromXType, float fromXValue, int toXType, float toXValue, int fromYType, float fromYValue, int toYType, float toYValue);
+		mytranslateanim.setDuration(2000);
+		anim.setStartOffset(800);
+		anim.addAnimation(mytranslateanim);
+		anim.setFillAfter(true);
+		mLeft.startAnimation(anim);
+
+24.启动activity时不自动弹出软键盘
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+25.点击窗口外部关闭窗口
+	@Override
+	public boolean onTouchEvent(MotionEvent event){
+		finish();
+		return true;
+	}
+
+26.SlidingDrawer滑动式抽屉（但是已过时）
+
+
+27.全屏显示
+	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);   
+
+28.去掉标题栏
+	requestWindowFeature(Window.FEATURE_NO_TITLE);（括号中也可以填"1"）
+
+29.在查询状态下，传值和执行不是用execSQL，而是邮标
+	String sql = "select * from collects where cookId=?";
+	Cursor c =db.rawQuery(sql, new String[]{id});
+
+
+=============================================================
+===================23:00 2016/5/9（上）======================
+=============================================================
+
+
+=============================================================
+===================18:00 2016/5/11（下）=====================
+=============================================================
+
+30.手电筒
+	30-1：定义参数：
+		Camera camera;
+		Parameters params;
+	30-2：开启：
+		camera = Camera.open();
+		params = camera.getParameters();
+		params.setFlashMode(Parameters.FLASH_MODE_TORCH);
+		camera.setParameters(params);
+		camera.startPreview();
+		Toast.makeText(getApplicationContext(), "电筒已开启", 0).show();
+	30-3：关闭：
+		camera.stopPreview();
+		camera.release();
+	30-4：权限：
+    		<!-- 相机、唤醒、电筒、振动 -->
+		<uses-permission android:name="android.permission.CAMERA"/>
+		<uses-permission android:name="android.permission.WAKE_LOCK"/>
+		<uses-permission android:name="android.permission.FLASHLIGHT"/>
+		<uses-permission android:name="android.permission.VIBRATE"/>
+
+31.振动事件监听（摇一摇）	
+	31-1：定义参数：
+		SensorManager sm;
+		Vibrator v;
+		sensorListener s;//监听事件
+	31-2：初始化：
+		sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+		v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		s = new sensorListener();
+		sm.registerListener(s, sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_NORMAL);
+	31-3：监听事件
+	    private class sensorListener implements SensorEventListener {
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			int sensorType = event.sensor.getType();
+			float[] values = event.values;
+			if (sensorType == Sensor.TYPE_ACCELEROMETER) {
+				if (Math.abs(values[0]) > 10 || Math.abs(values[1]) > 10
+						|| Math.abs(values[2]) > 10) {
+					v.vibrate(200);
+				}
+			}
+		}
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+
+		}
+	    }
+	31-4：在其它中也添加
+		@Override
+		protected void onPause() {
+			sm.unregisterListener(s);
+			super.onPause();
+		}
+		@Override
+		protected void onStop() {
+			sm.unregisterListener(s);
+			super.onStop();
+		}
+
+32.
+	et.setOnFousChangeListener(){};监听它的聚集
+	et.addTextChangedListener(){}监听它的值的改变
+	et.getCompoundDrawables(drawables[0],1,3);
+	et.setCompoundDraw
+
+
+=============================================================
+===================16:51 2016/5/13（下）=====================
+=============================================================
+
+33.启动activity时不自动弹出软键盘
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+34.设置标题栏的标题：setTitle("name");
+   设置文字的格式：
+	加粗：android:textStyle="bold"
+	倾斜：android:textStyle="italic"
+	使用默认的serifs字体：android:typeface="serif"
+
+
+=============================================================
+===================10:43 2016/5/14（下）=====================
+=============================================================
+
+35.内容提供者：ContentResolver
+    用内容提供者来获取联系人信息（详见内容提价者总结）
+
+
+=============================================================
+===================20:05 2016/5/16（下）=====================
+=============================================================
+
+
+36.Comparator实现排序
+	public class StepComparator implements Comparator<File>{
+     		//如果o1小于o2,返回一个负数;如果o1大于o2，返回一个正数;如果他们相等，则返回0;
+    		@Override
+		public int compare(File lhs, File rhs) {
+			//compareTo:比较字符串，相等为0，大于>0，小于<0
+			return lhs.getName().compareTo(rhs.getName());
+		}
+	}
+
+37.使用System.arraycopy()实现数组之间的复制
+	System提供了一个静态方法arraycopy(),我们可以使用它来实现数组之间的复制。
+	其函数原型是： public static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length) 
+		src:源数组； srcPos:源数组要复制的起始位置； 
+		dest:目的数组； 
+		destPos:目的数组放置的起始位置； 
+		length:复制的长度。 
+	注意：src and dest都必须是同类型或者可以进行转换类型的数组． 
+	有趣的是这个函数可以实现自己到自己复制。
+	比如： 
+		int[] fun ={0,1,2,3,4,5,6}; 
+		System.arraycopy(fun,0,fun,3,3); 
+	则结果为：
+		{0,1,2,0,1,2,6}; 
+	实现过程是这样的：
+		先生成一个长度为length的临时数组,
+		将fun数组中srcPos 到srcPos+length-1之间的数据拷贝到临时数组中，
+		再执行System.arraycopy(临时数组,0,fun,3,3).
+
+38.listView中滑到顶部
+	listView.setSelection(0)：直接跳到顶部
+	listView.smoothScrollToPosition(0)：平滑滚动到顶部
+
+39.ListView的加载优化ViewHolder
+    getview的加载方法一般有以下三种种方式：
+	1.最慢的加载方式是每一次都重新定义一个View载入布局，再加载数据
+		public View getView(int position, View convertView, ViewGroup parent) {
+ 			View item = mInflater.inflate(R.layout.list_item_icon_text, null);
+ 			((TextView) item.findViewById(R.id.text)).setText(DATA[position]);
+ 			((ImageView) item.findViewById(R.id.icon)).setImageBitmap((position & 1) == 1 ? mIcon1 : mIcon2);
+ 			return item;
+		}
+	2.正确的加载方式是当convertView不为空的时候直接重新使用convertView从而减少了很多不必要的View的创建，然后加载数据
+		public View getView(int position, View convertView, ViewGroup parent) {
+ 			if (convertView == null) {
+ 				convertView = mInflater.inflate(R.layout.item, parent, false);
+			}
+ 			((TextView) convertView.findViewById(R.id.text)).setText(DATA[position]);
+ 			((ImageView) convertView.findViewById(R.id.icon)).setImageBitmap((position & 1) == 1 ? mIcon1 : mIcon2);
+ 			return convertView;
+ 		}
+	3.最快的方式是定义一个ViewHolder，将convetView的tag设置为ViewHolder,不为空时重新使用即可
+		static class ViewHolder {
+			TextView text;
+			ImageView icon;
+		}
+ 
+		public View getView(int position, View convertView, ViewGroup parent) {
+ 			ViewHolder holder;
+ 
+ 			if (convertView == null) {
+ 				convertView = mInflater.inflate(R.layout.list_item_icon_text,parent, false);
+ 				holder = new ViewHolder();
+ 				holder.text = (TextView) convertView.findViewById(R.id.text);
+ 				holder.icon = (ImageView) convertView.findViewById(R.id.icon);
+ 				convertView.setTag(holder);//初始化后setTag
+			} else {
+				holder = (ViewHolder) convertView.getTag();//再次使用时getTag
+			}
+			holder.text.setText(DATA[position]);
+			holder.icon.setImageBitmap((position & 1) == 1 ? mIcon1 : mIcon2);
+			return convertView;
+		}
+
+40.ListView的优化
+	5-1.复用已经生成的convertView；
+	5-2.添加viewHolder类；
+	5-3.缓存数据（图片缓存）；
+	5-4.分页加载。
+	
+41.lastIndexOf(".")
+	public int lastIndexOf(String str): 
+	如果出现字符串参数一次或多次与该对象内的子字符串，则返回最后一个这样的字符串的第一个字符的索引返回。如果不出现作为一个子串，则返回-1。
+	参考网址：http://www.yiibai.com/java/java_string_lastindexof.html
+
+42.转换为大/小写
+	toUpperCase：将所有的英文字符转换为大写字母
+	toLowerCase：将所有的英文字符转换为小写字母
+
+43.subString()
+	subString(int index):
+		从你给的位置开始，一直截取到末取（注意下标和位数有1位的偏差）
+	subString(int index,int index1)
+		从index截取到index1
+
+44.使用getIdentifier()获取资源Id
+    使用getIdentifier()方法可以方便的获各应用包下的指定资源ID。
+    主要有两种方法：
+	9-1：方式一
+		Resources resources = context.getResources();
+		int indentify = resources.getIdentifier(org.loveandroid.androidtest:drawable/icon",null,null);
+		if(indentify>0){
+			icon = resources.getDrawable(indentify);
+		}
+	参数格式：
+		包名 + : + 资源文件夹名 + / +资源名；是这种格式 然后其他的可以为null
+
+	9-2：方式二
+		Resources resources = context.getResources();
+		int indentify= getResources().getIdentifier("icon", "drawable", "org.anddev.android.testproject");
+	参数格式：
+		第一个参数为ID名，第二个为资源属性是ID或者是Drawable，第三个为包名。  
+
+	9-3：结果
+		如果找到了，返回资源Id，如果找不到，返回0 。
+
+	9-4：例
+		int resId = getResources().getIdentifier(type, "drawable" , getPackageName());
+
+45.android 打开各种文件（setDataAndType）
+	10-1：java代码（打开文件）
+		Intent intent = new Intent(); 
+    		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); 
+    		//设置intent的Action属性 
+    		intent.setAction(Intent.ACTION_VIEW); 
+    		//获取文件file的MIME类型 
+    		String type = getMIMEType(file); 
+    		//设置intent的data和Type属性。 
+    		intent.setDataAndType(/*uri*/Uri.fromFile(file), type); 
+    		//跳转 
+    		startActivity(intent);
+
+	10-2：参考网址：http://zengyan2012.iteye.com/blog/1646492
+
+
+=============================================================
+===================20:05 2016/5/16（下）=====================
+=============================================================
+
+
+transparent：透明
+penbeat：学习
+vibreat：振动
+alpah：透明
+translate：平移
+rotate：旋转
+scale：缩放
+relative：相对的
+override:覆盖、重写
+ignorant ：无知的
+concentrate：集中注意力
+bluntly：直言不讳的
+Frequently：经常
+
+
+1.
+	异常：
+		File Not Found Exception
+	解决办法或原因：
+		文件未发现异常
+
+2.
+	异常：
+		File Not Found Exception
+	解决办法或原因：
+		非法状态异常
+
+3.
+	异常：
+		No Such Method Exception
+	解决办法或原因：
+		没有这样的方法异常
+	
+4.
+	异常：
+		IllegalStateException
+	解决办法或原因：
+		向方法传递了一个不合法或不正确的参数
+	
+5.
+	异常：
+		IllegalArgumentException
+	解决办法或原因：
+		
+6.
+	异常：
+		InvocationTargetException
+	解决办法或原因：
+		
+	
+7.
+	异常：
+		numberformatexception
+	解决办法或原因：
+		
+
+		
+1.
+	BUG：
+		Syntax error, insert "Dimensions" to complete Type Argument
+	解决方法：
+		讲法错误 反正就是要写封装类啦。
+		如把void写成Void以及int写成Integer
+
+2.
+	BUG：
+		Type mismatch: cannot convert from element type Object to List
+	解决方法：
+		一个元素不能从Object类型转换成List类型
+
+
+
+易读错读音
+? Youtube 念 优tiu啵 不念 优吐毙
+? Skype 念 死盖破 不念 死盖屁
+? Adobe 念 阿兜笔 不念 阿斗伯
+? Chrome 念 克肉姆 不念 可绕母
+? C# 念 C煞破 不念 C井
+? GNU 念 哥怒 不念 记恩优
+? GUI 念 故意 不念 记优爱
+? JAVA 念 扎哇 不念 加哇
+? AJAX 念 (ei)贾克斯 不念 阿贾克斯
+? Ubuntu 念 巫不恩兔 不念 友邦兔
+? Debian 念 得(dei)变 不念 代变
+? App 念 爱破 不念 A--P--P
+? null 念 闹 不念 怒熬
+? jpg 念 zhei派个 不念 J--P--G
+? gif 念 音标[d?if] 不念 G--I--F
+? WiFi 念 歪fai 不念 微费
+integer 念 音踢遮儿 不念 音胎个儿
+
+
+
+强制横屏|竖屏的设置方法
+方法一：按照下面代码示例修改Activity的onResume方法
+	@Override
+	protected void onResume() {
+		/**
+		 * 设置为横屏
+		 */
+		if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		}
+		super.onResume();
+	}
+
+方法二：修改AndroidManifest.xml文件：
+	<activity android:name=".Magazine">
+	</activity>
+//修改为：
+	<activity android:name=".Magazine"
+  	android:configChanges="orientation|keyboard">
+	</activity>
+
+==============================================================
+
+判断横屏还是竖屏
+ @Override 
+    public void onConfigurationChanged(Configuration newConfig){ 
+        super.onConfigurationChanged(newConfig); 
+     	if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+		//land
+     	}
+     	else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+		//port
+     	}
+    }
+
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+    到mrlouAPP中真正运行一次
+
+
+    view.loadUrl("file:///android_asset/errorpage/loaderror.html");
+    webView.getSettings().setDatabasePath(
+        "/data/data/" + webView.getContext().getPackageName() + "/databases/");
+
+
+
+
+        外部存储：通过Context.getExternalFilesDir(String type), type为空字符串时获取.
+
+
+        如果让我用句很有套路的话来说是有公式的：时间+一件小事+感受+山盟海誓。
+        例如：在前天晚上十点你下来陪我，一直以来我都以为你不会的，在那个时候心里暖暖的，就觉得如果能这样陪着苦点累点闷点都能接受。       （可是你喜欢有套路的回答吗？）
+
+        但是第一次真正心跳是在那次星期天晚上。我把自己找到工作的实情告诉了兵哥，班长把我拉到寝室问我，我知道他也是在关心我，但是被人这样闷头闷脑的一问，总觉得他是在怪我，我觉得自己经常给他带来麻烦，所以不想再麻烦他。然后你说为什么要瞒着你（因为在星期五的时候我告诉你了之后你让我不要告诉毛老司机和兵哥的），就那个时候，却觉得是体会到了真的关心，然后，怦然心动。
+
+        
+
+        说了又不听，听了又不懂，懂了又不做，做又做不好。

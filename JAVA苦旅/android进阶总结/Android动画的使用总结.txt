@@ -1,0 +1,99 @@
+Android当中的动画有几种: 三种。
+
+1、补间动画（透明渐变、平移、旋转、缩放、组合）
+
+    方法一：通过xml文件设置 
+	1-1：创建：res/anim
+	1-2：java代码写调用
+		Animation a = AnimationUtils.loadAnimation(this, R.anim.alpha);
+		img.startAnimation(a);
+	1-3：设置动画
+		1-3-1：透明渐变：alpha（透明度设置【0-1】） 
+			开始的透明度：android:fromAlpha="0"
+			结束的透明度 ： android:toAlpha="1"
+			花费的时间：毫秒android:duration="1000"
+		1-3-2：平移：translate
+			起始点的x、y的坐标值：android:fromXDelta="0"、android:fromYDelta="0"
+			结束点的x、y的坐标值：android:toXDelta="200"、android:toYDelta="200"
+			花费的时间：毫秒
+			保持最后的移动状态：android:fillAfter="true"
+			重复次数：android:repeatCount="3"
+			重复的效果：restart，reverse：android:repeatMode="restart"
+		1-3-3:旋转：rotate
+			起始角度：android:fromDegrees="0"
+			旋转角度：【-，+】android:toDegrees="-720"
+			花费的时间：毫秒
+			中心点：
+			   1.固定值：android:pivotX="500"、android:pivotY="500"
+			   2.相对自身的设置：android:pivotX="50%"、android:pivotY="50%"
+			   3.相对父控件的设置：android:pivotX="50%p"、android:pivotY="50%p"(p代表parent)
+		1-3-4:缩放：scale
+			起始x，y的倍数：android:fromXScale="0"、android:fromYScale="0"
+			结束x，y的倍数：android:toXScale="2"、android:toYScale="2"
+			花费的时间：毫秒
+		1-3-5:组合: set 
+			在每一个动画中添加startOffset，然后设置它们的先后顺序
+				android:startOffset="3000"
+
+    方法二：通过代码设置
+	AnimationSet set = new AnimationSet(true);
+	    直接写相应的属于性
+      		AlphaAnimation alpha = new AlphaAnimation(1f, 0f);
+     		alpha.setDuration(1000);
+      		set.addAnimation(alpha);
+		iV.startAnimation(set);
+	    或者：
+		TranslateAnimation m = new TranslateAnimation(fromXType,fromXValue,toXType,toXValue,fromYType,fromYValue,toYType,toYValue);
+ 		fromXType:绝对的动画类型（1或是2）
+		m.setDuration(1500);
+		set.addAnimation(m);
+		set.setStartOffset(800);
+		set.setFillAfter(true);
+		image.startAnimation(anim1);
+	也可以根据相应的属性写不同的代码
+		AlphaAnimation alpha = new AlphaAnimation(0, 0.8f);
+		alpha.setDuration(1000);
+		img.startAnimation(alpha);
+
+2、帧动画
+	2-1：新建文件夹darwable
+	2-2：新建文件XX.xml，并把所有的图片放进去
+		<item android:drawable="@drawable/run01" android:duration="100" />
+		……
+	2-3：在xml文件的ImageView控件中设置背景为XX.xml
+		android:background="@drawable/frame"
+	2-4：用AnimationDrawable控制它
+		AnimationDrawable ad = (AnimationDrawable) frameImage.getBackground();
+
+3、属性动画	
+	3-1：透明渐变：alpha（透明度设置【0-1】） 
+		ObjectAnimator.offFloat(img,"alpha",0.1f,1.0f).setDuration(2000).start();	
+	3-2：平移：translate
+		ObjectAnimator.ofFloat(img,"translationX",0f,200f).setDuration(2000).start();
+	3-3:旋转：rotate
+		ObjectAnimator.ofFloat(img,"rotationX",0f,720f).setDuration(2000).start();
+	3-4:缩放：scale
+		//上面的平移想要达到X轴和Y轴同时平移也可以这样写
+		ObjectAnimator anim1 = ObjectAnimator.ofFloat(img, "scaleX", 1.0f, 2f); 
+	        anim1.setDuration(1000);
+	        anim1.start();
+	        ObjectAnimator.ofFloat(img, "scaleY", 1.0f, 2f).setDuration(2000).start(); 
+	3-5:组合: set 
+		AnimatorSet as = new AnimatorSet();
+		ObjectAnimator oa1 = ObjectAnimator.ofFloat(img, "scaleX", 1.0f, 2f);
+		ObjectAnimator oa2 = ObjectAnimator.ofFloat(img,"rotateX",0f,720f);
+		ObjectAnimator oa3 = ObjectAnimator.ofFloat(img,"alpha",0f,0.7f);
+		as.setDuration(2000).setTarget(img);
+		as.play(oa1).with(oa2).after(oa3);
+		as.start();
+
+4、acitivy跳转的动画(多重补间动画循环)
+	4-1：新建两个动画
+	4-2：在中转之后设置它的使用
+		overridePendingTransition(R.anim.face_in, R.anim.face_out);
+
+5、布局动画。
+
+
+6、碎片切换的动画。
+

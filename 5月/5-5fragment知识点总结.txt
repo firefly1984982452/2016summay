@@ -1,0 +1,65 @@
+fragment知识点总结:
+	1.高版本：app包；需要向低版本兼容：v4包。
+	2.新建xml及class,class继承Fragment
+	  重写onCreatView(){}方法；
+	  View view = inflater.inflate(R.layout.activity_main, container, false);
+	3.页面整理
+		控制页：一般以按钮为主
+		碎片页：实现各种功能的各种页面
+		主页：把控制页和碎片页结合在一起的页面
+			注意：在v4包中，不是继承自Activity,而是FragmentActivity
+					不是getFragmentManager,而是getSuppurtFragmentManager
+	4.实现点击按钮切换功能
+		获取到FragmentManager来管理fragment
+			getFragmentManager()
+		开启事务
+			beginTransaction()
+		向容器内添加碎片
+			replace()
+		提交
+			commit()
+		附：返回键回到上一个fragment
+			transaction.addToBackStack(null);
+	5.碎片和活动之间进行通信
+		碎片——活动
+			调用getActivity()方法来得到和当前碎片相关联的活动实例
+				MainActivity activity = (MainActivity) getActivity();
+		活动——碎片：
+			调用FragmentManager的findFragmentById()方法
+				FragmentFav f4 = (FragmentFav) getFragmentManager().findFragmentById(R.id.f4);
+		碎片——碎片
+			先用碎片1调用活动，再通过活动调用碎片2
+		Button btn = (Button) view.findViewById(R.id.btn_test);
+		btn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), text, 0).show();
+				FragmentFav f4 = (FragmentFav) getFragmentManager().findFragmentById(R.id.f4);
+				f4.ChangeText(text);
+			}
+		});
+
+android课：
+	异步任务类（非第三方jar包）
+	增强的for循环 foreach
+
+ByteArrayOutputStream用法
+	InputStream in = hunn.getInputStream();
+	int len = 10;
+	byte[] buffer = new byte[1024*256];
+	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	while((len=input.read(buffer))>0){
+		baos.write(buffer,0,len);
+	}
+	String XX = baos.toByteArray();
+
+学习一门新语言需要掌握哪些：
+	1.会搭建它的环境；
+	2.能写出最基础的helloworld；
+	3.基本的逻辑代码会写；
+	4.能读取（即IO）
+	5.能使用它来操作网络部分
+
+附：
+	蒋老师演示了一种用Note.js来编写的纯js文件，可以用它来搭建服务器	
+	

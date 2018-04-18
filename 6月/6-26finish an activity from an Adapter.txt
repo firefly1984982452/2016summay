@@ -1,0 +1,2 @@
+How to finish an activity from an Adapter..?
+((Activity)context).finish();

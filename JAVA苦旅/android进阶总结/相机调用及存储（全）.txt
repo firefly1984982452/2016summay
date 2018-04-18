@@ -1,0 +1,147 @@
+
+	File outputImage;
+	private ImageView iv;
+	public static final int TAKE_PHOTO = 1;
+	public static final int CROP_PHOTO = 2;
+	private Uri imageUri;
+	private String path = Environment.getExternalStorageDirectory()
+			.getAbsolutePath();
+	private String imagePath;
+	private GridView gv_photos;
+	String photoPath = path + "/Six/image/";
+	File[] images;
+	ImageButton image;
+	List<Drawable> lists;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_image);
+		init();
+	}
+
+	private void init() {
+		// TODO Auto-generated method stub
+		iv = (ImageView) findViewById(R.id.iv_picture);
+
+		File f = new File(photoPath);
+		images = f.listFiles();
+
+		try {
+			lists = new ArrayList<Drawable>();
+			for (int i = 0; i < images.length; i++) {
+				FileInputStream fil = new FileInputStream(photoPath
+						+ images[i].getName());
+				Drawable d = Drawable.createFromStream(fil, null);
+				lists.add(d);
+			}
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		gv_photos = (GridView) findViewById(R.id.gv_photos);
+		gv_photos.setAdapter(new BaseAdapter() {
+
+			@Override
+			public View getView(int position, View convertView, ViewGroup parent) {
+				// TODO Auto-generated method stub
+				convertView = View.inflate(ImageActivity.this,
+						R.layout.item_photo, null);
+				ImageView iv = (ImageView) convertView
+						.findViewById(R.id.iv_photo_item);
+				TextView tv = (TextView) convertView
+						.findViewById(R.id.tv_photo);
+				tv.setText(images[position].getName());
+				iv.setImageDrawable(lists.get(position));
+				return convertView;
+			}
+
+			@Override
+			public long getItemId(int position) {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+			@Override
+			public Object getItem(int position) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return lists.size();
+			}
+		});
+	}
+
+	public void SelectImage(View view) {
+		// 创建File路径，用于存储拍照后的图片
+
+		// File filePath = Environment.getExternalStorageDirectory();
+
+		// 新建此文件夹
+		File fileFolder = new File(photoPath);
+		if (!fileFolder.exists() && !fileFolder.isDirectory()) {
+			fileFolder.mkdirs();
+		}
+
+		// 文件名不能总是同一个名字，所以在这里，可以选择用时间来做图片名称
+
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+		Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
+		String name = "six" + formatter.format(curDate);
+		// 新建此文件
+		outputImage = new File(fileFolder, name + ".jpg");
+		// 得到它的名字，在显示中用
+		imagePath = photoPath + name + ".jpg";
+		// 找到地址及调用
+		imageUri = Uri.fromFile(outputImage);
+		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+		// 启动相机程序
+		startActivityForResult(intent, TAKE_PHOTO);
+
+	}
+
+	// 注意，这里是要重写这个方法，必须要重写！！
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		switch (requestCode) {
+		case TAKE_PHOTO:
+			if (resultCode == RESULT_OK) {
+				Intent intent = new Intent("com.android.camera.action.CROP");
+				intent.setDataAndType(imageUri, "image/*");
+				intent.putExtra("scale", true);
+				intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+				// 启动裁剪程序
+				startActivityForResult(intent, CROP_PHOTO);
+			}
+			break;
+		case CROP_PHOTO:
+			if (resultCode == RESULT_OK) {
+				try {
+					Bitmap bitmap = BitmapFactory
+							.decodeStream(getContentResolver().openInputStream(
+									imageUri));
+					// 将裁剪后的照片显示出来
+					iv.setImageBitmap(bitmap);
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			break;
+		default:
+			break;
+		}
+	}
+
+	public void PhotoToImage(View view) {
+		Toast.makeText(ImageActivity.this, "未做待续哈~", 0).show();
+	}
+

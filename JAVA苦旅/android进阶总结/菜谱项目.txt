@@ -1,0 +1,136 @@
+到19:22 2016/5/7为止未完成的功能：
+	收藏功能中的取消收藏，以及收藏之后不能点进去查看详情了，就是在判断是否收藏那里出了问题
+
+这个项目，总共做了一个星期，而别人，只做了3天，这就是我和别人的差距吗？
+
+现做分析如下，争取吸取教训：
+	思路篇：
+		一定一定要先有一个稳定的思路，不然写到后期会很痛苦的。
+		1.首先应该是分析它的业务逻辑
+			页面：都应该是Fragment，Activity只有三个（详情、列表、主页）
+				首页：菜式样品或其它有意思的
+				分类：用ExpandableListView来显示二级菜单
+				搜索：
+				收藏：显示数据库中收藏的数据
+			数据库：
+				暂时只做了收藏的数据库
+		2.先做什么，后做什么
+			可以先把页面框架搭建成功
+			首页、分类
+			详情页面及收藏
+			收藏之后能判断是否收藏等等
+		3.代码篇
+			真的有很多很多都是没接触过的，或是第三方控件
+			分包，分类
+			
+	代码篇：
+		1.把常量封闭在实体类中
+			public static final String QUERY_URL="http://apis.juhe.cn/cook/query.php";
+			public static final String CATEGORY_URL="http://apis.juhe.cn/cook/category";
+			public static final String TAG_URL="http://apis.juhe.cn/cook/index";
+			public static final String QUERYID_URL="http://apis.juhe.cn/cook/queryid";
+			public static final String APP_KEY = "d08aa6ee29adb71c1aca14b9209338a8";	
+		2.获取网络数据的类（可以写成单倒模式）			
+			// 私有静态成员变量（自己做为自己的实例）
+			private static HttpService instance;
+			private AsyncHttpClient httpClient;
+			// 构造方法也是私有，别人就new 不了
+			private HttpService() {
+			httpClient = new AsyncHttpClient();
+			httpClient.setConnectTimeout(5000);
+			}
+			// 但是别人也需要访问，所以给一个公有方法，返回自己
+			public static HttpService getInstance() {
+				if (instance == null) {
+					instance = new HttpService();
+				}
+				return instance;
+			}
+			//搜索时得到的菜
+			public void getCook(String menu,int pn,int sn,ResponseHandlerInterface responseHandler){
+				RequestParams param = new RequestParams();
+				param.add("menu", menu);
+				param.add("key", Constant.APP_KEY);
+				param.add("pn", pn+"");
+				param.add("rn", sn+"");
+				param.add("albums", "1");
+				httpClient.get(Constant.QUERY_URL,param,responseHandler);
+			}
+		3.新建一个对象类（菜谱类)
+			public int _id;
+			public String id;
+			public String title;
+			public String tags;
+			public String imtro;
+			……
+			写它的toString方法
+		4.写页面，通过点击“搜索”按钮来获取数据
+			xml页面省略
+		5.解析
+				public String resultcode;
+				public String reason;
+				public List<Cook> cooks;
+				public CookJsonHandler(JSONObject response){
+					parseResult(response);
+				}
+				private void parseResult(JSONObject json){
+					if(json!=null){
+						try {
+							resultcode = json.getString("resultcode");
+							reason = json.getString("reason");
+							JSONObject result = json.getJSONObject("result");
+							JSONArray data = result.getJSONArray("data");
+							//使用fastjson快速转换
+							cooks = JSON.parseArray(data.toString(), Cook.class);
+				
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
+		6.适配
+			继承BaseAdapter
+			List<Cook> datas;
+			LayoutInflater inflater;
+			//构造方法：
+			public CookAdapter(Context context, List<Cook> datas) {
+				this.inflater = LayoutInflater.from(context);
+				this.datas = datas;
+			}
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder;
+		if (convertView == null) {
+			convertView = inflater.inflate(R.layout.adapter_cook_item, null);
+			holder = new ViewHolder();
+			holder.cookImg = (SmartImageView) convertView.findViewById(R.id.cookImgItem);
+			holder.cookName = (TextView) convertView
+					.findViewById(R.id.cookNameItem);
+			holder.cookTitle = (TextView) convertView
+					.findViewById(R.id.cookTitleItem);
+			holder.cookIntro = (TextView) convertView
+					.findViewById(R.id.cookIntroItem);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
+		}
+		Cook cook = datas.get(position);
+		holder.cookName.setTag(cook);// 把cook对象绑定对cookName控件上
+		holder.cookImg.setImageUrl(cook.albums[0]);
+		holder.cookName.setText(cook.title);
+		holder.cookIntro.setText(cook.imtro);
+		holder.cookTitle.setText(cook.tags);
+		return convertView;
+
+	}
+
+	static class ViewHolder {
+		public SmartImageView cookImg;
+		public TextView cookName;
+		public TextView cookTitle;
+		public TextView cookIntro;
+
+	}
+
+	7.在listview界面中适配
+

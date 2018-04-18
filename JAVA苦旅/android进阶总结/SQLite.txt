@@ -1,0 +1,209 @@
+一、新建SQLite操作类（继承SQLiteOpenHelper）
+
+public class SQLiteTest extends SQLiteOpenHelper {
+　　final static String DB_NAME = "test.db";//数据库名
+　　private int version = 1;//数据库版本名
+　　public SQLiteTest(Context context) {//当在别处调用时，只要传上下文就行了
+　　super(context, DB_NAME, null, 1);
+}
+
+@Override
+public void onCreate(SQLiteDatabase db) {
+　　//建表
+　　String sql = "create table if not exists students(" +
+　　"s_id integer primary key autoincrement," +
+　　"s_name varchar(30)," +
+　　"s_sex integer," +
+　　"s_age integer)";
+　　db.execSQL(sql);
+}
+
+@Override
+public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+// 升级数据库
+　　db.execSQL("drop table if exeits students");
+　　this.onCreate(db);
+
+}
+
+}
+
+　　
+
+二、新建对象类（比如是学生数据库就新建学生类）
+
+　　注意点：get和set方法、构造方法
+
+
+
+三、对象操作类
+
+　　
+
+public class StudentDao {
+　　private Context context;
+　　SQLiteTest db ;
+　　SQLiteDatabase sb;
+　　public StudentDao(Context context) {
+　　　　super();
+　　　　this.context = context;
+　　　　db = new SQLiteTest(context);
+　　　　sb = db.getWritableDatabase();
+　　}
+　　//添加数据
+　　public void addStudent(Student s){
+　　　　String sql = "insert into students values(null,?,?,?)";
+　　　　sb.execSQL(sql,new Object[]{s.getS_name(),s.getS_sex(),s.getS_age()});
+　　}
+　　//删
+　　public void delStudent(int id){
+　　　　String sql = "delete from students where s_id=?";
+　　　　sb.execSQL(sql,new Object[]{id});
+　　}
+　　//改
+　　public void updateStudent(Student s){
+　　　　String sql = "update students set s_name=?,s_sex=?,s_age=? where s_id=?)";
+　　　　sb.execSQL(sql,new Object[]{s.getS_name(),s.getS_sex(),s.getS_age(),s.getS_id()});
+　　}
+　　//查
+　　public List<Student> getAllStudent(){
+　　　　List<Student> list = new ArrayList<Student>();
+　　　　Student s;
+　　　　String sql = "select * from students";
+　　　　//Cursor邮标
+　　　　Cursor c = sb.rawQuery(sql, new String[]{});
+　　　　while (c.moveToNext()) {
+　　　　　　int id = c.getInt(c.getColumnIndex("s_id"));
+　　　　　　int sex = c.getInt(c.getColumnIndex("s_sex"));
+　　　　　　String showSex;
+　　　　　　if(sex==0){
+　　　　　　　　showSex="女";
+　　　　　　}else {
+　　　　　　　　showSex="男";
+　　　　　　}
+　　　　　　int age = c.getInt(c.getColumnIndex("s_age"));
+　　　　　　String name = c.getString(c.getColumnIndex("s_name"));
+
+　　　　　　s = new Student(id, name, age, showSex);
+　　　　　　list.add(s);
+　　　　}
+
+　　　　return list;
+
+　　}
+}
+
+
+
+五、在Activity中操作它：
+
+private Button btn1;
+ListView lv;
+StudentDao sd;
+List<Student> list;
+int sid;
+
+protected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+setContentView(R.layout.activity_main);
+init();
+
+}
+
+public void init() {
+sd = new StudentDao(MainActivity.this);
+list = sd.getAllStudent();
+btn1 = (Button) findViewById(R.id.add);
+lv = (ListView) findViewById(R.id.lv_student);
+lv.setAdapter(adapter);
+LongClick();
+}
+
+
+
+public void LongClick() {
+lv.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+@Override
+public boolean onItemLongClick(AdapterView<?> parent, View view,
+int position, long id) {
+// TODO Auto-generated method stub
+sid = list.get(position).getS_id();
+AlertDialog.Builder confirm = new AlertDialog.Builder(
+MainActivity.this);
+confirm.setTitle("删除确认");
+confirm.setMessage("你确认要删除此信息吗？");
+confirm.setNegativeButton("否", new OnClickListener() {
+
+@Override
+public void onClick(DialogInterface dialog, int which) {
+// TODO Auto-generated method stub
+
+}
+});
+confirm.setPositiveButton("是", new OnClickListener() {
+
+@Override
+public void onClick(DialogInterface dialog, int which) {
+// TODO Auto-generated method stub
+
+sd.delStudent(sid);
+init();
+}
+});
+confirm.setCancelable(false);
+confirm.show();
+return true;
+}
+
+});
+}
+
+public void addStu(View v) {
+
+Intent intent = new Intent();
+intent.setClass(MainActivity.this, NewStuActivity.class);
+startActivity(intent);
+}
+
+BaseAdapter adapter = new BaseAdapter() {
+@Override
+public View getView(int position, View convertView, ViewGroup parent) {
+convertView = View.inflate(MainActivity.this, R.layout.student,
+null);
+TextView et_id = (TextView) convertView.findViewById(R.id.tv_id);
+TextView et_name = (TextView) convertView
+.findViewById(R.id.tv_name);
+TextView et_sex = (TextView) convertView.findViewById(R.id.tv_sex);
+TextView et_age = (TextView) convertView.findViewById(R.id.tv_age);
+
+et_id.setText(list.get(position).getS_id() + "");
+et_name.setText(list.get(position).getS_name());
+et_sex.setText(list.get(position).getShowSex());
+et_age.setText(list.get(position).getS_age() + "");
+return convertView;
+}
+
+@Override
+public long getItemId(int position) {
+// TODO Auto-generated method stub
+return position;
+}
+
+@Override
+public Object getItem(int position) {
+// TODO Auto-generated method stub
+return list.get(position);
+}
+
+@Override
+public int getCount() {
+// TODO Auto-generated method stub
+return list.size();
+}
+};
+
+
+
+xml略
+

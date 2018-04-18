@@ -1,0 +1,8 @@
+xml读取异常Invalid byte 1 of 1-byte UTF-8 sequence
+1、最简单就是把<?xml version="1.0" encoding="UTF-8"?>改成<?xml version="1.0" encoding="gbk"?>
+
+2、或者把xml打开另存的时候把字符集改为UTF-8后保存
+
+3、在代码解析的时候先把xml重新写一遍
+
+4、直接dom4j读取的时候用io来读，修改字符编码

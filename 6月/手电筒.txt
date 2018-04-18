@@ -1,0 +1,102 @@
+1、手电筒的开/关功能
+	1-1：权限
+	1-2：页面
+	1-3：代码
+2、摇一摇开/关功能
+
+========================================================
+
+录音：
+1、权限
+
+2、录、停MediaRecorder
+初始化、声音来源（类型）、声音编码、文件格式、文件保存地址、准备、开始  停止、释放
+           mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);  
+             mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);  
+             mRecorder.setOutputFile("/sdcard/peipei.3gpp");  
+             mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+3、播、停MediaPlayer
+   初始化
+    声音来源、准备 、开始
+   停止、释放资源、置空
+
+===========================================================
+
+相机
+1、权限
+
+2、照相
+    新建照片文件   new File
+    把文件路径转换为Uri路径，  为什么要用Uri，为了在得到它的时候是唯一地址    Uri.fromFile
+    调用相机   Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+		// 把照片地址传进去
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+		// 等下有返回信息（即拍照完成）
+		startActivityForResult(intent, 1);
+    接收值
+    如果接收码为我们传过去的值，并且返回码为OK，
+     接收图片Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+    
+3、显示
+
+
+package com.example.musictest;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+
+public class PhotoActivity extends Activity {
+	String FilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+	ImageView image;
+	Uri imageUri;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_photo);
+		image = (ImageView) findViewById(R.id.iv_image);
+	}
+	/**
+	 *1、文件名
+	 *2、文件地址要转换为Uri值，为了让它成为唯 一的地址
+	 *3、调用相机  intent 跳转   返回 
+	 */
+    public void Photo(View v){
+    	File fileName = new File(FilePath+"/hello.jpg");
+		Log.e("TAG", fileName+"====");
+    	imageUri = Uri.fromFile(fileName);
+    	Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+    	intent.putExtra(MediaStore.EXTRA_OUTPUT, fileName);
+    	startActivityForResult(intent, 1);
+    }
+    
+    //这个是当有返回值时调用的
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode==1&& resultCode==RESULT_OK) {
+			Log.e("TAG", "====");
+			try {
+				Bitmap decodeStream = BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+				image.setImageBitmap(decodeStream);
+				} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+    
+    
+    
+}

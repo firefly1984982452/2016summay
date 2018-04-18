@@ -1,0 +1,55 @@
+2.服务
+	2-1：启动服务
+		2-1-1：创建服务
+			extends Service
+		2-1-2：注册
+			<service android:name="com.firefly.style_study.MyService"></service>
+	2-2：绑定服务
+		流程思路：先使用媒介绑定服务，才能用“播放”、“暂停”等功能
+		2-2-1：先使用ServiceConnection作为媒介，绑定服务
+			ServiceConnection conn ;
+		2-2-2：新建一个Binder继承Binder（已实现IBinder接口）
+			public class MyBinder extends Binder {
+				MyService getService(){
+					return MyService.this;
+				}
+			}
+		2-2-3：在默认的IBinder方法中返回自己新建的Binder
+			@Override
+			public IBinder onBind(Intent intent) {
+				return new MyBinder();
+			}
+		2-2-4：在绑定成功的方法中实例化自己写的服务
+			MyService ms;
+			conn= new ServiceConnection() {			
+				@Override
+				public void onServiceDisconnected(ComponentName name) {
+					Log.e("TAG", "绑定取消");
+				}			
+				@Override
+				public void onServiceConnected(ComponentName name, IBinder service) {
+					//绑定成功的时候就会执行此方法
+					Log.e("TAG", "绑定成功");
+					MyBinder binde = (MyBinder)service;
+					ms = binde.getService();
+				
+				}
+			};
+		2-2-5：开始绑定
+			bindService(i3, conn, BIND_AUTO_CREATE);
+		2-2-6：播放、暂停音乐
+			ms.PlayMusic();
+			ms.StopMusic();
+		2-2-7：取消绑定
+			unbindService(conn);
+
+
+
+
+
+
+
+
+
+
+

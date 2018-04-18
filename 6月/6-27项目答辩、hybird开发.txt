@@ -1,0 +1,117 @@
+﻿上午：问卷调查答辩
+
+	说明：
+		登录：基本功能
+		个人中心：查看信息
+		更改密码：旧密码确认是当前用户，两次新密码是确认真的想修改密码，并且密码不是随便输入的
+		注销：用来更改帐户，所以需要立马登录
+		列表：网络未加载完成时有默认图片
+		开始答题：静态变量、计时、录音、定位
+				文件、相机操作
+		抽取样本：SQLite
+
+	注意到的细节：
+		登录时的查看密码
+
+	未做完：
+		上传  接口有BUG
+		查看样本——完成/未完成
+		抽取样本——提交
+
+
+
+下午：
+1.Hybird混合式开发
+	web app:
+
+	native app:
+		本地app(基于本地系统的app)
+		android: java
+		ios: object -c
+
+2.使用webView让android项目和html5混合开发
+	android:
+		xml:
+			<?xml version="1.0" encoding="utf-8"?>
+			<WebView xmlns:android="http://schemas.android.com/apk/res/android"
+			    android:id="@+id/webview"
+			    android:layout_width="fill_parent"
+			    android:layout_height="fill_parent" />
+		activity:
+			//初始化
+		        myWebView = (WebView) findViewById(R.id.webview);
+		        myWebView.loadUrl(netUrl);//加载Url
+	        //设置WebView
+		        myWebView.setWebViewClient(new WebViewClient(){
+		            @Override
+		            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+		                view.loadUrl(url);
+		                return true;
+		            }
+		        });
+	        //得到设置类
+		        WebSettings ws = myWebView.getSettings();
+		        ws.setJavaScriptEnabled(true);//允许js脚本
+	        //把js调用的方法写在WebApp
+	        	myWebView.addJavascriptInterface(new MyWebAppInterface(this),"android");
+	        //按返回键返回上一页
+			    @Override
+			    public boolean onKeyDown(int keyCode, KeyEvent event) {
+			        // Check if the key event was the Back button and if there's history
+			        if ((keyCode == KeyEvent.KEYCODE_BACK) && myWebView.canGoBack()) {
+			            myWebView.goBack();
+			            return true;
+			        }
+			        // If it wasn't the Back key or there's no web page history, bubble up to the default
+			        // system behavior (probably exit the activity)
+			        return super.onKeyDown(keyCode, event);
+			    }
+
+
+晚上：
+1.Node.js搭建服务器
+	安装：
+		中文官网安装，在方式中选择All Path……
+		在cmd中输入node -v 和 npm -v 都有输出内容证明安装成功
+	下载bower：
+		npm install bower -g //-g是全局变量
+	搭建服务器并更改端口：
+		http-server -p 14023
+	在对应目录下开始一个新的命令
+		shift+右键
+
+2.android studiio 添加assets
+	http://www.jianshu.com/p/e84710dee554
+
+3.html5和android的交互
+	WebApp类:
+		public class MyWebAppInterface {
+		    Context context;
+
+		    public MyWebAppInterface(Context context) {
+		        this.context = context;
+		    }
+		    //注解
+		    @JavascriptInterface
+		    public String lookData(String data){
+		        Log.e("TAG",data+"hello!!");
+		        return "hello";
+		    }
+		}
+
+	html:
+      	function look(){
+      		var ua = navigator.userAgent.toLocaleLowerCase();
+      		alert(ua);
+      		//判断是否android
+      		if(/android/.test(ua)){
+      			//发送消息
+      			var msg = window.android.lookData('I am html5');
+      			//把接收到的消息写到span里面
+      			document.getElementById('span').innerHTML=msg;
+      			alert(msg);
+      		}
+      	}
+
+扩展点：
+webkit

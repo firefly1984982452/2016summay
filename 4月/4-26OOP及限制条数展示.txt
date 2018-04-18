@@ -1,0 +1,80 @@
+OOP：面向对象（以东西为导向的程序设计）
+
+类：人类（类别）
+对象：学生（东西）
+类是模板，而对象是产品
+
+行为：方法（吃饭、睡觉、自我介绍）
+	public void selfIntroduce(){
+		sysout(我叫什么，多少岁);
+	}
+
+Student extends Person{
+	父子类之间包含同名的方法（函数），这种行为被称为覆盖（重写）
+		public void 同名方法(形参一致){}
+		它会就近原则的选择此类的方法
+}
+
+权限：即访问权限
+	public:   自己、包内、子类、其它包
+	protected:自己、包内、子类
+	default:  自己、包内
+	private:  自己
+
+
+
+封闭、继承、多态
+
+
+山回路转不见君，出门左转是维基
+雪上空留马行处，出门右转是百度
+
+
+打包
+<ExpandableListView>
+
+
+原来的做法：
+
+	private ListView lv;
+	List<String> datas;
+	int start = 0;
+	int end = 20;
+	ArrayAdapter<String> a;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		lv = (ListView) findViewById(R.id.lv);
+		datas = Get.getData(start, end);
+		start=end;
+		end=start+end;
+		a = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,datas);
+		lv.setAdapter(a);
+		listener();
+	}
+	private void listener() {
+		// TODO Auto-generated method stub
+		lv.setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				Log.e("TAG", "scrollState:" + scrollState);
+				if (scrollState == 0
+						&& view.getLastVisiblePosition() == (datas.size() - 1)) {
+					Toast.makeText(MainActivity.this, "正在加载数据……", 0).show();
+					onCreate(null);
+				}
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+				Log.e("TAG", "firstVisibleItem" + firstVisibleItem
+						+ ",visibleItemCount" + visibleItemCount
+						+ ",totalItemCount" + totalItemCount);
+			}
+		});
+	}
+

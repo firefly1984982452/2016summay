@@ -1,0 +1,97 @@
+@font-face {
+  font-family: "SourceHanSansCN-Normal";
+  font-style: normal;
+  font-weight: 400;
+  src: url(SourceHanSansCN-Normal.ttf);
+}
+body, div, span,object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+    border: 0 none;
+    font-size: 100%;
+    margin: 0;
+    padding: 0;
+    font-family:"SourceHanSansCN-Normal";
+    letter-spacing: -1px;
+	font-weight:bold;
+}
+table{border-collapse: collapse;}
+html,body{height:100%;}
+a,input,textarea,label{font-weight:bold;letter-spacing: -1px;font-family:"SourceHanSansCN-Normal";text-decoration:none;background-color:transparent;border:0;padding:0;margin:0;-webkit-tap-highlight-color:rgba(0,0,0,0);outline:none;}
+
+因为你没有选择。在Web世界里，只有JavaScript能跨平台、跨浏览器驱动网页，与用户交互。
+
+
+    数组：
+      MAP======key-value
+        var m = new Map();
+        m.set('id',1);
+        m.has('id',1);
+        m.get('id');
+        m.del('id');
+        由于一个key只能对应一个value，所以，多次对一个key放入value，后面的值会把前面的值冲掉
+
+    SET=============key
+      var s = new Set();
+      s = [1,2,3,3,'3'];  //3和'3'不同
+      重复的3会过滤
+      通过add(key)方法可以添加元素到Set中，可以重复添加，但不会有效果
+      通过delete(key)方法可以删除元素
+
+    用iterable迭代时可用for...of循环
+    var a = [1,2,3];
+    for(var x of aa){}
+
+    for in 和 for of 的区别
+      for in 是传递的下标值0,1,2...
+      for of 是传递值
+17763631621
+    // 因为jQuery对象与数组相似
+    // 可以为其添加与数组一致的迭代器方法
+    jQuery.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+
+    ES6的学习，是不可避免的了
+      let与const 关键字
+      可以把let看成var，只是它定义的变量被限定在了特定范围内才能使用，而离开这个范围则无效。const则很直观，用来定义常量，即无法被更改值的变量。
+
+      使用的最多的是promise
+
+      把Array的所有数字转为字符串：
+        var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        arr.map(String); // ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    
+      filter过滤
+      sort排序
+        不是直接比大小，而是比ascll码,比如22要排在3的前面
+
+
+      reduce的使用方法（乘积）
+        return arr.reduce(function(x,y){
+          return x*y;
+        });
+
+  闭包：
+    返回闭包时牢记的一点就是：返回函数不要引用任何循环变量，或者后续会发生变化的变量。
+
+  匿名函数：
+    理论上讲，创建一个匿名函数并立刻执行可以这么写：
+        function (x) { return x * x } (3);
+    但是由于JavaScript语法解析的问题，会报SyntaxError错误，因此需要用括号把整个函数定义括起来：
+        (function (x) { return x * x }) (3);
+
+  箭头函数：
+    x => x * x
+    上面的箭头函数相当于：
+    function (x) {
+        return x * x;
+    }
+
+  generator
+    generator和函数不同的是，generator由function*定义（注意多出的*号），并且，除了return语句，还可以用yield返回多次。
+    调用generator对象有两个方法，一是不断地调用generator对象的next()方法：
+      var f = fib(5);
+      f.next(); // {value: 0, done: false}
+      f.next(); // {value: 1, done: false}
+    第二个方法是直接用for ... of循环迭代，这种方式不需要我们自己判断done：
+      for(var x of fib2(5)) {
+        console.log(x); // 依次输出0, 1, 1, 2, 3
+      }
+

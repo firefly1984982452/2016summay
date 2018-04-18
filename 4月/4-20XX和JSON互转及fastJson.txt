@@ -1,0 +1,114 @@
+作业：
+（此作业在记事本全屏下观看效果最佳）
+一、传统方法：
+	对象转JSON
+		1.try{ 下文内容写在此处 }catch(Exception e){}
+		2.新建对象
+			对象 对象1 = new 对象（）；
+			JSONObject jo = new JSONObject();
+			jo.put(name,value);
+		3.jo.toString();
+
+	JSON转对象
+		1.同样，，try catch（此处为手打，所以下文都不再写，省略重复代码）
+		2.得到JSON （可以自己新建，也可以从网络获取）
+		3.新建JSONObject 传入刚刚新建的JSON字符串
+		上面对象转JSON是用的put方法，那么此处是用get方法，示范代码如下：
+			String name = jsonObj.getString("name");
+			……（其它省略）
+		4.对象 对象1 = new 对象（）；
+		5.对象1.toString();
+
+	集合转JSON
+		1.新建集合
+			ArrayList<People> list = new ArrayList<People>();
+		2.新建JSONArray
+			JSONArray ja = new JSONArray();
+		3.新建对象（可以多建几个）
+			People p2 = new People(3, "彭彭3", "女");
+		4.添加进集合
+			list.add(p2);
+		5.转换
+			String jsonString = JSON.toJSONString(list);
+
+	JSON转集合
+		1.获得json字符串
+		2.新建ArrayList<对象> list ……省略
+		3.新建JSONArray ja = new JSONArray<获取到的json>
+		4.遍历JSONArray
+			新建JSONObject 传入i（即遍历到第几个就传入几）
+			同上文的JSON转对象，因为在遍历的过程中这里是对象
+				String name = jsonObj.getString("name");
+				……（其它省略）
+			添加到list中去，遍历完也就添加完了。
+		5.完全，打印list.toString()就可以看到。
+
+	MAP转JSON
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("name", "anna");
+				map.put("sex", "女");
+				String ww = JSON.toJSONString(map);
+
+	JSON转MAP
+				String map1 = "{\"id\":5,\"name\":\"lisa\",\"sex\":\"女\"}";
+				Map<String, Object> map2 = JSON.parseObject(map1);
+
+				for (String key : map2.keySet()) {
+					Log.e("TAG", key.toString() + "=" + map2.get(key));
+				}
+
+
+二、fastJson方法：
+
+	对象转JSON
+		新建对象
+		转===JSON.toJSONString(对象);
+
+	JSON转对象
+		新建JSON（也可以是从网络上获取的JSON数组）
+			JSON代码示范如下：
+				"{\"name\":\"乔峰\",\"sex\":\"男\",\"age\":\"30\"}"
+		转===JSON.parseObject(json,要转成哪个对象的类);
+
+	集合转JSON
+		新建集合：
+			ArrayList<对象> list =新建
+			新建对象1、2、3等等
+			list.add(对象1);
+			list.add(对象2);
+			list.add(对象3);
+			……
+			
+		转换部分上同
+
+	JSON转集合
+		新建集合部分上同
+		转===JSON.parseArray(json,要转成哪个对象的类);
+
+	MAP转JSON
+		新建MAP：
+			Map<String,String> map = HashMap<String,String>();
+			map.put("键","值");
+		转换部分上同
+
+	JSON转MAP
+		//老师是不是说暂不提供此功能来着。。
+
+    fastJson部分总结：
+	XX转JSON：
+		JSON.toJSONString(XX);
+	JSON转XX：
+		类 a = JSON.parseObject(XX,XX.class);
+
+    fastJson部分欠缺点：
+	fastJson很好用也很好掌握，一开始写上面6段代码时，写完第1个第2个之后，后面的就觉得不会写，是觉得JAVA部分的集合和MAP不会写，但是我还是硬着头皮写了，然后也没有运行就直接在网络上找别人的代码看看作参考，看有没有写错。然后黄龙看到了说我写对了。后来我运行了一下，果然，我写对了。。。
+	可见，我的欠缺点是对自己的不自信。。
+	其实，集合和MAP好像还是没怎么弄懂，但是会写了，知道怎样写，也不知道这样算不算掌握。
+
+
+三、复杂的解析
+
+
+
+
+呃，要交作业了，，，做不完了，，，没时间了，，，，但是我一个都是每用心的在写，在总结。

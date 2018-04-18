@@ -1,0 +1,24 @@
+用xutils3加载网络图片
+	x.image().bind(image,headUrl);
+设置它的样式
+	x.image().bind(image,headUrl,imageOptions);
+	ImageOptions imageOptions;
+        imageOptions = new ImageOptions.Builder()
+                .setSize(DensityUtil.dip2px(120), DensityUtil.dip2px(120))
+                .setRadius(DensityUtil.dip2px(5))
+                // 如果ImageView的大小不是定义为wrap_content, 不要crop.
+                .setCrop(true)
+                // 加载中或错误图片的ScaleType
+                //.setPlaceholderScaleType(ImageView.ScaleType.MATRIX)
+                .setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+                //设置加载过程中的图片
+                .setLoadingDrawableId(R.drawable.u8)
+                //设置加载失败后的图片
+                .setFailureDrawableId(R.drawable.u8)
+                //设置使用缓存
+                .setUseMemCache(true)
+                //设置支持gif
+                .setIgnoreGif(false)
+                //设置显示圆形图片
+                 .setCircular(true)
+                .build();

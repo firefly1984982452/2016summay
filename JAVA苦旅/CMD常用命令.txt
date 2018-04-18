@@ -1,0 +1,26 @@
+0、滑动关机 slidetoshutdown
+1、appwiz.cpl：程序和功能（程序卸载）
+2、calc：启动计算器
+3、charmap：启动字符映射表
+4、chkdsk.exe：Chkdsk磁盘检查（管理员身份运行
+
+命令提示符）
+5、cleanmgr： 打开磁盘清理工具
+6、自动关机命令Shutdown -s -t 600：表示600秒
+
+后自动关机（有没有人像我一样使用番茄工作法？
+
+其实很多时候很难控制自己，这是一个很好的方法
+
+）
+7、shutdown -a ：可取消定时关机
+8、Shutdown -r -t 600：表示600秒后自动重启
+9、rundll32 user32.dll，LockWorkStation：表示
+
+锁定计算机
+10、control：控制面版
+11、msdt：微软支持诊断工具
+12、notepad：打开记事本
+13、Rstrui：系统还原（这个很有用，我上次乱改注
+册表，电脑开机就黑屏，我依靠盲操作用这项命令
+还原了电脑）

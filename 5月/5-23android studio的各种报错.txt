@@ -1,0 +1,28 @@
+1、使用android studio 写“天气预报”Demo中遇到的问题
+	1-1:object对象不能序列化：
+	     强转：alt+enter  再按enter
+	1-2:获取到的数据不能添加到list中去
+		WeatherInfo wea = JSON.parseObject(info, WeatherInfo.class);
+		list= wea.getResult().getData().getWeather();
+	1-3:传输过去的数据只有1个，但我解析的是未来天气，理应是7个数据
+		其实在第2个就改过来了。。
+
+2、android studio的各种问题
+	2-1：gradle版本问题
+		网上说升到最新，或是用低版本的1.5.0，我试过最新的不行，后来就改成了1.5.0
+	2-2：快捷键
+		。。。多记点吧
+
+3、导入as项目后报错
+	报错信息：Error:(1, 0) Your project path contains non-ASCII characters. This will most likely cause the build to fail on Windows. Please move your project to a different directory. See http://b.android.com/95744 for details. This warning can be disabled by using th
+	解决：换英文路径
+
+4、修改android已建好工程的API version
+	报错信息：Error:Cause: failed to find target with hash string 'android-23' in: ……
+	解决：修改android已建好工程的API version
+		a、打开工程
+		b、找到build.gradle打开
+		c、找到defaultConfig
+		d、把里面的targetSdkVersion值改成你自己的
+	解决方法二：更新到android6.0
+	我就是用的第二种方法。

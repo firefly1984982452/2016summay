@@ -1,0 +1,256 @@
+拍照：
+
+1、权限：
+	<!-- SD卡读写 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+2、目录存照片
+	public static final int TAKE_PHOTO = 1;//拍照
+	private String path = Environment.getExternalStorageDirectory().getAbsolutePath();//根目录
+
+	ImageView image;
+	Uri imageUri;
+
+3、名称及调用
+		//新建照片文件
+		File outputImage =new File(path,"outputimage.jpg");
+		//把File对象，转换为Uri对象，即为这张照片的唯一地址
+		Uri imageUri = Uri.fromFile(outputImage);
+		//调用相机
+		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+		//把照片地址传进去
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+		//等下有返回信息（即拍照完成）
+		startActivityForResult(intent, 1);
+
+4、重写方法
+	// 注意，这里是返回信息
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		//如果请求码为刚刚请求的信息，并且返回码为OK
+		if (requestCode == TAKE_PHOTO && resultCode == RESULT_OK) {
+			try {
+				//得到图片
+				Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver()
+						.openInputStream(imageUri));
+				// 将照片显示出来
+				image.setImageBitmap(bitmap);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+
+=================================================================================================
+
+视频播放
+
+方法一：VideoView
+
+		video.setVideoPath(Environment.getExternalStorageDirectory().getAbsolutePath()+musicName);
+		video.start();
+
+
+方法二：SurfaceView+MediaPlayer
+1、布局
+    <SurfaceView
+        android:id="@+id/sf_video"
+        android:layout_width="match_parent"
+        android:layout_height="300dp" />
+
+2、用SurfaceHolder控制画布
+    private SurfaceView surfaceView = null ;  
+    private SurfaceHolder surfaceHolder = null ;  
+    private MediaPlayer mp = null ;  
+
+3、初始化控件及监听事件
+	et_Name = (EditText) findViewById(R.id.et_name);
+	musicName = et_Name.getText().toString();
+        surfaceView = new SurfaceView(this);  
+        surfaceHolder = surfaceView.getHolder();          
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);  
+        surfaceHolder.addCallback(this);  
+        setContentView(surfaceView);  
+
+4、创建完成之后再播放
+        mp = new MediaPlayer();          
+        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);  
+        mp.setDisplay(surfaceHolder);  
+        try {  
+            mp.setDataSource(Environment.getExternalStorageDirectory().getAbsolutePath()+musicName);  
+            mp.prepare();  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        }  
+        mp.start();  
+
+
+=======================================================================================================
+
+录音
+    <!-- 录音的权限 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+package com.example.musictest;
+
+import java.io.IOException;
+import android.app.Activity;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.os.Bundle;
+import android.os.Environment;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
+
+public class RecordActivity extends Activity {
+    //语音文件保存路径  
+    private String FileName = Environment.getExternalStorageDirectory().getAbsolutePath(); 
+    //语音操作对象  
+    private MediaPlayer mPlayer = null;  
+    private MediaRecorder mRecorder = null; 
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_record);
+	}
+
+	public void Record(View v) {
+		switch (v.getId()) {
+		case R.id.startRecord:
+			Toast.makeText(getApplicationContext(), "开始录音", 0).show();
+            mRecorder = new MediaRecorder();  
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);  
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);  
+            mRecorder.setOutputFile(FileName);  
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);  
+            try {  
+                mRecorder.prepare();  
+            } catch (IOException e) {  
+                Log.e("TAG", "prepare() failed");  
+            }  
+            mRecorder.start();  
+			break;
+
+		case R.id.stopRecord:
+			Toast.makeText(getApplicationContext(), "停止录音", 0).show();
+            mRecorder.stop();  
+            mRecorder.release();  
+            mRecorder = null;  
+			break;
+
+		case R.id.startPlay:
+			Toast.makeText(getApplicationContext(), "开始播放", 0).show();
+            mPlayer = new MediaPlayer();  
+            try{  
+                mPlayer.setDataSource(FileName);  
+                mPlayer.prepare();  
+                mPlayer.start();  
+            	Toast.makeText(RecordActivity.this, "正在播放录音", 0).show();
+            }catch(IOException e){  
+            	e.printStackTrace();
+            	Toast.makeText(RecordActivity.this, "播放失败", 0).show();
+            }  
+			break;
+
+		case R.id.stopPlay:
+			Toast.makeText(getApplicationContext(), "停止播放", 0).show();
+            mPlayer.release();  
+            mPlayer = null;  
+			break;
+
+		default:
+			break;
+		}
+	}
+}
+
+=====================================================================================================
+
+摇一摇+手电筒
+
+1、权限
+    <!-- 相机、唤醒、电筒、振动 -->
+	<uses-permission android:name="android.permission.CAMERA"/>
+	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+	<uses-permission android:name="android.permission.FLASHLIGHT"/>
+	<uses-permission android:name="android.permission.VIBRATE"/>
+	<uses-feature android:name="android.hardware.camera" />
+        <uses-feature android:name="android.hardware.camera.autofocus" />
+        <uses-feature android:name="android.hardware.camera.flash" />
+
+2、布局
+    <ImageView
+        android:id="@+id/image"
+        android:onClick="init"
+        android:clickable="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/on"/>
+
+3、打开/关闭手电筒
+	相机打开、参数（永久开灯还是只闪一次）、开启亮灯
+		if (flag==false) {
+			camera = Camera.open();
+			Parameters param = camera.getParameters();
+		//设置照相机参数，FLASH_MODE_TORCH  持续的亮灯，FLASH_MODE_ON 只闪一下
+			param.setFlashMode(Parameters.FLASH_MODE_TORCH);
+			camera.setParameters(param);
+			camera.startPreview();//开启亮灯
+			//改变背景图片
+			image.setImageResource(R.drawable.off);
+			//状态改变
+			flag=true;
+		}else{
+			camera.stopPreview();//关闭亮灯
+			camera.release();//关闭照相机
+			//改变背景图片
+			image.setImageResource(R.drawable.on);
+			//状态改变
+			flag=false;	
+		}
+
+4、摇一摇打开手电筒
+
+	//传感器管理、传感器监听
+	SensorManager sm;
+	SensorListener listener;
+
+	初始化
+		sm = (SensorManager) getSystemService(SENSOR_SERVICE);
+		listener = new SensorListener();
+		//注册
+		//第一个是一个实现了SensorEventListener 接口的类，当有数据到来时会调用onSensorChanged 方法，
+		//第二个是我们获取到的需要注册的sensor,
+		//第三个是需要的反应速率
+		sm.registerListener(listener, 
+				sm.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), 
+				SensorManager.SENSOR_DELAY_NORMAL);
+	震动监听事件
+			// 传感器变化
+			//得到传感器的类型
+			int sensorType = event.sensor.getType();
+			//摇晃力度
+			float[] value = event.values;
+			//如果类型为震动
+			if (sensorType==Sensor.TYPE_ACCELEROMETER) {
+				//震动值
+				if (Math.abs(value[0])>15&&Math.abs(value[1])>15&&Math.abs(value[2])>15) {
+					Replease();
+					v.vibrate(200);
+				}
+				
+			}
+
+	传感器管理、监听、注册，震动监听事件
+
+
+=======================================================================
+hello world
+
+高类聚：
+低耦合：尽量减少接触，用公共方法来调用

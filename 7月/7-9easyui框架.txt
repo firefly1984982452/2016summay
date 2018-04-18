@@ -1,0 +1,4 @@
+上午：
+    用框架做一个简单的后台页面
+    http://www.jeasyui.com/demo/main/index.php
+    查文档、查文档、查文档

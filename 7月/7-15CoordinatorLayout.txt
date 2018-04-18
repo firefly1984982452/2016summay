@@ -1,0 +1,136 @@
+上午：
+    卸载win10自带的应用
+    win+R------PowerShell
+    Get-AppxPackage *OneNote* | Remove-AppxPackage
+
+    mui获取相机
+        1.权限
+        2.查文档
+            http://www.html5plus.org/doc/zh_cn/camera.html
+        3.copy
+            不要小看复制这件事，要找到相应的点也是需要技巧的
+        4.获取路径及展示
+            http://www.html5plus.org/doc/zh_cn/io.html
+
+
+    在CMD中输入../../是跳出目录
+    跨域问题：
+        ajax(jsonp)
+        java
+    在hybird开发中把alert变成toast
+        extends WebChromeClient
+
+    新思维：
+        尽量不使用静态变量保存核心数据
+            原因：
+                android系统中的应用进程并不是安全的，包括application对象、静态变量在内的进程级别变量并不会一直呆着内存里面，它会被kill掉，它真的有可能会被kill掉，真的真的，重要的事情说三遍。
+
+            看法：
+                与大家普遍的看法不同之处在于，当进程被干掉之后，实际上app不会重新开始启动。Android系统会创建一个新的Application 对象，然后启动上次用户离开时的activity以造成这个app从来没有被kill掉得假象。而这时候静态变量等数据由于进程已经被杀死而被初始化，所以就有了我们的不推荐在静态变量（包括Application中保存全局数据静态数据）的观点.
+
+            解决办法：
+                直接将数据通过intent传递给 Activity 。
+                使用官方推荐的几种方式将数据持久化到磁盘上。
+                在使用数据的时候总是要对变量的值进行非空检查。
+
+            原文链接：
+                http://blog.csdn.net/qq_23547831/article/details/51655330
+
+
+    上传照片
+        链接：
+            http://blog.csdn.net/leeandmins/article/details/50857357
+        知识点：
+            plus.camera.getCamera返回摄像头管理对象，之后可以对拍照参数进行设置，拍照成功会调用回调函数。
+            使用resolveLocalFileSystemURL可以通过URL参数获取目录对象或文件对象，把entry转换成本地路径之后就可以保存啦。
+
+
+
+下午：
+    lambda
+    http://www.importnew.com/16436.html
+
+    1.compileSdkVersion, minSdkVersion 和 targetSdkVersion 的作用：他们分别控制可以使用哪些 API ，要求的 API 级别是什么，以及应用的兼容模式。
+    compileSdkVersion：
+        告诉 Gradle 用哪个 Android SDK 版本编译你的应用。使用任何新添加的 API 就需要使用对应 Level 的 Android SDK
+        修改 compileSdkVersion 不会改变运行时的行为
+        总是使用最新的 SDK 进行编译
+    minSdkVersion：
+        应用可以运行的最低要求
+    targetSdkVersion：
+        Android 提供向前兼容的主要依据
+        由于某些行为的变化对用户是非常明显的（弃用的 menu 按钮，运行时权限等），所以将 target 更新为最新的 SDK 是所有应用都应该优先处理的事情。但这不意味着你一定要使用所有新引入的功能，也不意味着你可以不做任何测试就盲目地更新 targetSdkVersion ，请一定在更新 targetSdkVersion 之前做测试！你的用户会感谢你的
+    minSdkVersion <= targetSdkVersion <= compileSdkVersion
+
+    1、CompileSdkVersion是你SDK的版本号，也就是API Level，例如API-19、API-20、API-21等等。
+    2、buildeToolVersion是你构建工具的版本，其中包括了打包工具aapt、dx等等。这个工具的目录位于..your_sdk_path/build-tools/XX.XX.XX
+
+
+    2.Android SDk Manager里面到底哪些东西是必须下载的？
+        https://www.zhihu.com/question/31935836
+        SDK Tools 必须
+        SDK Platform-tools 必须
+        SDK Platform必须至少安装一个版本
+        System Image建议安装
+        Android Support建议安装
+        SDK Samples建议安装
+
+    3.自学CoordinatorLayout
+        链接：http://blog.csdn.net/xyz_lmn/article/details/48055919
+        配置参考：http://stackoverflow.com/questions/30852844/android-studio-rendering-problems-with-coordinatorlayout
+        如下：
+            apply plugin: 'com.android.application'
+            android {
+                compileSdkVersion 22
+                buildToolsVersion "21.1.2"
+                defaultConfig {
+                    applicationId "com.godine"
+                    minSdkVersion 21
+                    targetSdkVersion 22
+                    versionCode 1
+                    versionName "1.0"
+                }
+                buildTypes {
+                    release {
+                        minifyEnabled false
+                        proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                    }
+                }
+                lintOptions {
+                    abortOnError false
+                }
+            }  
+            dependencies {
+                compile fileTree(dir: 'libs', include: ['*.jar'])
+                compile 'com.android.support:cardview-v7:22.2.0'
+                compile 'com.android.support:recyclerview-v7:22.2.0'
+                compile 'com.android.support:design:22.2.0'
+                compile 'com.android.support:appcompat-v7:22.2.0'
+                ...
+            }
+        各用应用：
+            强烈推荐：http://blog.csdn.net/xyz_lmn/article/details/48055919
+            http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2015/0717/3196.html
+        总结笔记：
+            CoordinatorLayout作为“super-powered FrameLayout”基本实现两个功能： 
+                1、作为顶层布局 
+                2、调度协调子布局
+            CoordinatorLayout------最外层的盒子
+            FloatingActionButton------浮动的按钮
+                android:layout_gravity="end|bottom"：右下角
+
+        意外得到的更多知识点：
+            Android studio的工程默认继承AppcompatActivity类和Activity不同
+                作者：匿名用户
+                链接：https://www.zhihu.com/question/35709367/answer/64134667
+                来源：知乎
+                著作权归作者所有，转载请联系作者获得授权。
+
+                Activity 发展到3.0（大概）之后，可以使用fragment了，但是support v4 提供了1.6~3.0的fragment兼容，所以如果需要用兼容版的fragment，则需要继承support v4提供的FragmentActivity。而后一点点时间之后，3.0（大概）出现的ActionBar也被向前支持了，这次是出现在support v7里，如果需要使用兼容版的actionbar，则继承support v7提供的ActionBarActivity（它是继承FragmentActivity的）。再然后也就是去年年底到今年，5.0提供了很多很多新东西，于是support v7也更新了，出现了AppCompatActivity , 具体功能请自行查找。
+
+                https://blog.xamarin.com/android-tips-hello-appcompatactivity-goodbye-actionbaractivity/
+
+                还有同学，你的信息获取渠道需要更新了，ActionBar已经被划上了横线，取而代之的是ToolBar，学习编程最忌讳的就是因循守旧，技术革新这么快，说不定2/3都不适用现在了，而且百度随便能搜到的教程大多都是观点偏颇&&角度单一&&用法错误&&解释不到位&&等等。所以带上一些工程师的热情，备好梯子和词典，主动去广泛获取知识。
+
+
+

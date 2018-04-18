@@ -1,0 +1,23 @@
+﻿Six便笺：
+	1.Six便笺是一个离线项目
+	2.Six便笺
+
+
+synchronized 关键字，它包括两种用法：
+	synchronized 方法和 synchronized 块。  
+	1.synchronized 方法：
+		通过在方法声明中加入 synchronized关键字来声明 synchronized 方法。
+		如：  
+			public synchronized void accessVal(int newVal);  
+        	synchronized 方法控制对类成员变量的访问：
+			每个类实例对应一把锁，每个 synchronized 方法都必须获得调用该方法的类实例的锁方能执行，否则所属线程阻塞，方法一旦执行，就独占该锁，直到从该方法返回时才将锁释放，此后被阻塞的线程方能获得该锁，重新进入可执行状态。这种机制确保了同一时刻对于每一个类实例，其所有声明为synchronized的成员函数中至多只有一个处于可执行状态（因为至多只有一个能够获得该类实例对应的锁），从而有效避免了类成员变量的访问冲突（只要所有可能访问类成员变量的方法均被声明为 synchronized）。  
+		
+			在 Java 中，不光是类实例，每一个类也对应一把锁，这样我们也可将类的静态成员函数声明为 synchronized ，以控制其对类的静态成员变量的访问。  
+
+		synchronized 方法的缺陷：若将一个大的方法声明为synchronized 将会大大影响效率，典型地，若将线程类的方法 run() 声明为synchronized ，由于在线程的整个生命期内它一直在运行，因此将导致它对本类任何 synchronized 方法的调用都永远不会成功。当然我们可以通过将访问类成员变量的代码放到专门的方法中，将其声明为 synchronized ，并在主方法中调用来解决这一问题，但是 Java 为我们提供了更好的解决办法，那就是 synchronized 块。  
+
+	2. synchronized 块：通过 synchronized关键字来声明synchronized 块。语法如下：  
+		synchronized(syncObject) {  
+			//允许访问控制的代码  
+		}  
+		synchronized 块是这样一个代码块，其中的代码必须获得对象 syncObject （如前所述，可以是类实例或类）的锁方能执行，具体机制同前所述。由于可以针对任意代码块，且可任意指定上锁的对象，故灵活性较高。  

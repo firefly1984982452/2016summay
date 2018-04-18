@@ -1,0 +1,34 @@
+webview 新开一个页面把它加进去，不要用href跳转
+setTimeOut:异步
+主线程会不管它的进行，继续执行代码
+回调：把一个方法作为参数
+
+HTML5按钮点击跳转
+	<script type="text/javascript">
+		document.getElementById("open").addEventListener("tap", function() {
+			mui.openWindow("tab-webview-main.html", "tab-webview-main", null);
+		});
+	</script>
+
+时间、选择、行动
+
+6月底 androi结束
+后面的课程
+百度地图 gps定位
+图片的绽放处理 oom异常，内存溢出  会讲图片的压缩处理、缓存问题（二级缓存，到磁盘存一个、硬盘存一个。三级缓存（少用））
+jdk1.5之后 新特性 比如线程有专门的线程池
+ 反射机制 写框架时用反射  如hibernate
+ 泛型 
+ Lambda表达式  可用可 不用
+android 5.0控件 recyclerview
+远程服务
+NDK java代码调用c代码
+登录
+支付
+加密
+解密
+二维码扫描
+绘画的view
+自定义控件
+
+ UI

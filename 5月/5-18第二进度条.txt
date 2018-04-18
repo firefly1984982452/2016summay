@@ -1,0 +1,6 @@
+昨天的BUG，今天处理好了
+在适配器中应该是Mp3Info music = datas.get(position);但是我写成为新建
+
+android:secondaryProgress="70"第二进度条
+
+

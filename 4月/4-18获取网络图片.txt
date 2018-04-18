@@ -1,0 +1,57 @@
+﻿获取网络图片
+方法一：
+1.权限
+	<use-permissing android:name="android.permissing.INTERNET"/>
+2.类、地址 
+   URL==地址（网络上那张图片的地址）
+   HttpURLConnection==连接
+ 连接方式 GET POST
+ 连接时间===随便
+ 返回值 200才是成功连接
+
+3.耗时太长，所以要用线程
+	new Thread(){
+		public void run(){
+			//然后上面的代码都写在这里
+		}
+	}.start();
+4.主线程中要放UI，所以要用Handler接收
+
+
+方法二：
+在GitHub在找smartImageView
+复制源文件过来
+看到哪报错就到哪个文件去，，，导包的导包，强转的强转等等。
+使用它：
+	在xml文件中，把原来的<ImageView>替代成它的类（注意，要包括包名）；
+	在java文件中，把相应的ImageView替代成它的类
+	使用它
+
+
+
+欠缺点：
+	Handler 
+	Bitmap（这个对我来说是新知识点）
+
+if (huc.getResponseCode()==200) {
+	//首先要得到它，所以要用转输入流
+	InputStream is = huc.getInputStream();
+	//通过Bitmap转换
+	Bitmap bm = BitmapFactory.decodeStream(is);
+	//消息发送机制，直接发送对象
+	Message msg = new Message();
+	msg.obj=bm;
+	//发送
+	handler.sendMessage(msg);
+	//设置
+	iv.setImageBitmap(bm);					
+}
+
+Handler handler = new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			// 接收整个对象，然后强转
+			iv.setImageBitmap((Bitmap) msg.obj);
+			super.handleMessage(msg);
+		}
+	};

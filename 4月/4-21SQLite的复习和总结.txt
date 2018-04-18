@@ -1,0 +1,99 @@
+一、SQLite的复习和总结：
+	1.新建一个类，就是你要装什么的类。比如学生管理就是学生类，便笺管理就是便笺类等等。
+	2.写好它的增删改查dao
+	3.在页面中应该是运行就查询
+
+
+近期未完成事项
+android课程项目
+	欢迎页
+	ViewPager
+android离线项目
+天气预报
+培训课的一大堆。。。
+
+
+总结：
+一定要写id，一定要写id，一定要写id...
+还要写入文件的权限。。。。
+
+
+
+
+
+
+
+二、android之调用系统打电话与发短信界面
+
+系统打电话界面：
+
+Intent intent = new Intent();
+
+//系统默认的action，用来打开默认的电话界面
+intent.setAction(Intent.ACTION_CALL);
+
+//需要拨打的号码
+
+intent.setData(Uri.parse("tel:"+i));
+callPhoneAndSendMessage.this.startActivity(intent);
+
+ 
+
+系统发短信界面：
+
+Intent intent = new Intent();
+
+//系统默认的action，用来打开默认的短信界面
+intent.setAction(Intent.ACTION_SENDTO);
+
+//需要发短息的号码
+intent.setData(Uri.parse("smsto:"+i));
+callPhoneAndSendMessage.this.startActivity(intent);
+
+
+
+
+
+
+
+三、listview传递数据
+
+// 传数据给另一个Activity编辑
+		//首先，得到数据
+		String tv_title = ((TextView) view.findViewById(R.id.tv_title_item)).getText().toString();
+		String tv_content = ((TextView) view.findViewById(R.id.tv_content_item)).getText().toString();
+		String[] note_info = {tv_title,tv_content};
+		//用Bundle数组传递数据
+		Intent intent = new Intent();
+		Bundle b = new Bundle();
+		b.putStringArray("note_info", note_info);
+		intent.putExtras(b);
+		intent.setClass(MainActivity.this,EditNoteActivity.class);
+		startActivity(intent);
+
+
+// 首先获取得到的数据
+		Intent intent = getIntent();
+		Bundle b = this.getIntent().getExtras();
+		note_info = b.getStringArray("note_info");
+		
+		et_title_up = (EditText) findViewById(R.id.et_title_up);
+		et_content_up = (EditText) findViewById(R.id.et_content_up);
+		
+		et_title_up.setText(note_info[0]);
+		et_content_up.setText(note_info[1]);
+
+
+
+
+四、java代码中去提状态栏和标题栏
+//	getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//	requestWindowFeature(Window.FEATURE_NO_TITLE);//1
+
+
+
+
+五、多功能便笺：
+颜色功能、提醒功能、发送到朋友圈
+发送 到桌面、相机和照片、插件
+手写涂鸦、录音、置顶、分类、密码

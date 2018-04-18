@@ -1,0 +1,100 @@
+左上角退出：<a href="javascript:app.goBack();" class="go_back"><i></i></a>
+
+    (启动H5本地存储)WebView显示网页出现Uncaught TypeError: Cannot call method 'getItem' of null异常
+    http://blog.csdn.net/u010064206/article/details/48639195
+
+    webview.getSettings().setDomStorageEnabled(true);     
+    webview.getSettings().setAppCacheMaxSize(1024*1024*8);    
+    String appCachePath = getApplicationContext().getCacheDir().getAbsolutePath();    
+    webview.getSettings().setAppCachePath(appCachePath);    
+    webview.getSettings().setAllowFileAccess(true);    
+    webview.getSettings().setAppCacheEnabled(true);   
+
+
+    WebView myWebView;
+    //    String loadUrl = "file:///android_assets/index.html";本地
+    String netUrl = "http://192.168.5.113:14023/lxs/lxs_index.html";
+    
+        @SuppressLint("SetJavaScriptEnabled")
+        @Override protected void onCreate(Bundle savedInstanceState){
+            super.onCreate(savedInstanceState);
+            this.getWindow().requestFeature(Window.FEATURE_PROGRESS);
+            setContentView(R.layout.main);
+            myWebView=(WebView)findViewById(R.id.mainWebView);
+            myWebView.getSettings().setJavaScriptEnabled(true);
+            myWebView.getSettings().setUseWideViewPort(true);
+            myWebView.loadUrl("http://www.bsstudios.portfoliobox.me");
+            myWebView.setWebViewClient(new WebViewClient(){
+                @Override public boolean shouldOverrideUrlLoading(WebView view,String url){
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
+        }
+        @Override public boolean onKeyDown(int keyCode,KeyEvent event){
+            if((keyCode==KeyEvent.KEYCODE_BACK)&&myWebView!=null&&myWebView.canGoBack()){
+                myWebView.goBack();
+                return true;
+            }
+            return super.onKeyDown(keyCode,event);
+        }
+
+
+
+
+javascript 详解 window.open()方法
+
+    window.open("url","窗口的名称"，"参数字符串");
+    url: 打开窗口的网址或路径。
+    窗口的名称："_blank","_top","_self"等。
+    参数字符串：
+    width:窗口的宽度；
+    height：窗口的高度；
+    top:窗口距离顶部的高度。
+    left:窗口距离左边的宽度。
+    注意：以下几个参数的值均为：yes|no。 
+    menubar:窗口是否有菜单栏。
+    toolbar:窗口是否有工具栏。
+    scrollbars:窗口是否有滚动条。
+    status：窗口是否有状态栏。
+
+
+
+    children和find的区别
+        children:
+            $("#tb>tbody").children("tr:eq(1) td:eq(1)").html()===td
+        Find：
+            $("#tb>tbody").find("tr:eq(1) td:eq(1)").html()===td的值
+
+
+    上文引用：this.bindAction();
+    下文：bindAction : function(){}
+    外部引用：a.bindAction();
+    http://zhidao.baidu.com/link?url=xggWQ8vFuwnTkN4yCwKkPxEtRypI6kmQ5OaFHyKap-vfp348ME040j6L-ksugtb211h-0s_0_pQMIXr8m8zkX_
+
+    移动设备web开发插件iScroll的使用
+    参考：
+        http://blog.nnnv.cn/index.php/archives/65
+    ISCROLL参数设置
+        <script type="text/javascript">
+            var myScroll = new iScroll('wrapper', { 
+                hScrollbar: false, 
+                vScrollbar: false ,
+                hideScrollbar: true
+                });
+        </script>
+        第2个参数是以对象的形式传递的。如上代码中为效果为隐藏滚动条。参数如下：
+            hScroll：无论内容是否超出显示区域，都禁用水平方向的滚动条。默认情况下是水平和垂直方向同时出现的。
+            vScroll：禁用垂直方向的滚动条。
+            hScrollbar：隐藏水平方向的滚动条。
+            vScrollbar：隐藏垂直方向的滚动条。
+            fixedScrollbar：在IOS中拖动滚动条的时候可能会使内容（或滚动条，）缩小，设置该参数为true可防止该现象。同样适用于Android。Android默认为true，IOS默认为FALSE。
+            hideScrollbar：在用户没有操作的时候是否隐藏滚动条。默认为false
+            fadeScrollbar：设置滚动条的谈入谈出效果。在hideScrollbar为true的时候有效
+            bounce：设置滚动条边界的时候是否有反弹效果，默认为true。
+            momentum：设置是否开始惯性，关闭此效果可节省资源
+            lockDirection：保持只在两个方向上或滚动（上/下或左/右），在翻屏的时候可使用。不过我在Android上测试的时候似乎没效果，不知道是我测试方法错了还是怎么回事。
+
+
+            问题：
+                在register_step1对应的js文件中，并没有对验证码进行操作，那app中的提示是哪来的

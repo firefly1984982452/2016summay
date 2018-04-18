@@ -1,0 +1,15 @@
+    $.ajax({
+       type: "POST",
+       dataType:"jsonp",
+       jsonpCallback:"CallBack",
+       url: err_cor_url,
+       data: err_cor_parm,
+       success: function(data){
+        alert(data.list);
+         $("textarea").text( "Data Saved: " + data.list);
+       },
+       error:function(){
+        alert("失败")
+        $("textarea").text("失败");
+       }
+    });

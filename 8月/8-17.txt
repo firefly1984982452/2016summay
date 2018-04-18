@@ -1,0 +1,38 @@
+    实现textarea限制输入字数
+    http://www.cnblogs.com/butterfly/archive/2009/04/27/1444598.html
+    ＜script language="#" type="text/ecmascript"＞ 
+        window.onload = function() { 
+            document.getElementById('txta1').onkeydown = function(){    
+                if(this.value.length >= 10) 
+                  event.returnValue = false; 
+            } 
+        } 
+    ＜/script＞ 
+
+    最终： maxlength="20"！！！！！
+    活到老，学到老。
+
+
+    纠错需要接口上传到服务器
+    注册身份
+
+
+    a标签href不跳转 禁止跳转
+    http://www.cnblogs.com/lipanpan/p/4095524.html
+
+    标签属性href，使其指向空或不返回任何内容。如：
+    <a href="javascript:void(0);" >点此无反应javascript:void(0)</a>
+
+    <a href="javascript:;" >点此无反应javascript:</a>
+
+    标签事件onclick，阻止其默认行为。如：
+    <a href="" onclick="return false;">return false;</a>
+
+    <a href="#" onclick="return false;">return false;</a>
+
+    注意：只有一个href="#"是不可以的。
+
+
+
+    设置或返回被选元素的属性值
+    $("img").attr({ src: "test.jpg", alt: "Test Image" });

@@ -1,0 +1,14 @@
+异步任务类总结：
+	AsyncHttpClient asy = new 新建
+	//肯定要有携带的请求参数
+	RequestParams rp = new 新建
+	rp.put("key","value");
+	//提交，get用get，post用post
+	asy.get("网址",参数,提交格式){
+		成功、失败两个方法的内容
+	}
+	asy.post("http://www.baidu.com",rp,new TextHttpResponseHandler("utf-8")){}
+
+
+菜谱没写出来，结果异步任务类学会了。。。
+	

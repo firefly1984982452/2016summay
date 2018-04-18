@@ -1,0 +1,31 @@
+设备功能：
+
+传感器 
+音乐 
+拍照 
+
+录音 播放 
+录相 播放 
+
+系统设备 
+传感器 定位GPS 指南针 AIDL
+
+播放视频：
+	MediaPlayer控制视频的播放停止
+	SurfaceView控件展示图像
+	SurfaceHolder控制画布
+	
+		sfHolder = sf.getHolder();
+		sfHolder.setKeepScreenOn(true);// 设置不黑屏
+		sfHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		try {
+			music = new MediaPlayer();
+			music.setAudioStreamType(AudioManager.STREAM_MUSIC);
+			music.setDataSource(Environment.getExternalStorageDirectory()
+					.getAbsolutePath() + "/windows/BstSharedFolder/test.mp4");
+			music.setDisplay(sfHolder);//重点
+			music.prepare();
+			music.start();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}

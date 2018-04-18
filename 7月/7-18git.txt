@@ -1,0 +1,56 @@
+晨：
+    不要远离功利，也不要被功利绑架，要与功利做朋友，这样它才会把钱介绍给你，功利是你和钱的中间人。
+    人因无私奉献不求回报而伟大，人也会因认真赚钱而伟大。
+    恩，钱是不能买来幸福，钱本身就是幸福。
+
+    我的大学四年，一头扑入了读书中， 就像掉入了兔子洞的爱丽丝。在读书这个兔子洞里，那些经历的迷茫、挫折和奇遇，都是上大学之前的我不曾想象的！我不算一个合格的学生，我忘了不少任课老师，忘了我的学号，忘了班上不少美丽的女同学的样子，却没有忘记某个夏天的中午，汗流浃背的我冲进图书馆，跳入一阵凉爽的书香；以及某个春天，我在草坪上读书入了迷，喷水龙头把我后背全打湿了还浑然不觉。这就是我对兔子洞的最美好的记忆。 
+
+    学习点：
+        Sugar 用超级简单的方法处理Android数据库
+        3种退出方法
+        书籍：思维的乐趣    
+
+    记录：
+        我前几天学的Coordinator叫材料设计兼容库
+
+
+上午：
+    How to prevent favicon.ico requests?
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+
+
+下午：
+先$ git pull --rebase origin master
+再$ git push origin master
+参考：http://www.tuicool.com/articles/3aIvQfU
+
+git push -f origin master
+
+这么说吧，我写文章不是为了挣钱，我也不认为写文章能挣到钱，我写文章就是为了分享和影响，我会借助社交网络，但不会寄宿在社交网络上，更不会被社交网络所绑架。
+
+“愿你们合上笔盖的刹那，有着侠客收剑入鞘的骄傲。”
+
+清除本应用内部缓存(/data/data/com.xxx.xxx/cache) * *
+参考：http://blog.csdn.net/wwj_748/article/details/42737607
+public static void cleanInternalCache(Context context) {
+        deleteFilesByDirectory(context.getCacheDir());
+    }
+
+                        AlertDialog.Builder clean = new AlertDialog.Builder(getActivity());
+                        clean.setTitle("确认清除缓存？");
+                        clean.setNegativeButton("确认", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                //调用工具类，清除缓存
+                                DataCleanManager.cleanInternalCache(getActivity());
+                                Toast.makeText(getActivity(), "清除成功！", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        clean.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                        clean.setCancelable(false);
+                        clean.show();

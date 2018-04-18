@@ -1,0 +1,104 @@
+1、碎片的动态切换：
+   1-1：页面填写
+    <FrameLayout
+        android:id="@+id/fl_layout"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <fragment
+            android:id="@+id/fragment_two"
+            android:name="com.firefly.fragment.FragmentTwo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+    <fragment
+        android:id="@+id/fragment_one"
+        android:name="com.firefly.fragment.FragmentOne"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+   1-2：在Activity中新建碎片
+	FragmentTwo f2 = new FragmentTwo();
+	……
+   1-3：新建FragmentManager管理碎片
+   1-4：点击后切换
+	fm.beginTransaction().replace(R.id.fl_layout, f3).commit();
+
+2、加入ViewPager,实现滑动切换与点击切换
+   2-1：在xml文件中写入<android.support.v4.view.ViewPager/>
+   2-2：在Activity文件中写入它的ViewPager及List<Fragment>
+	ViewPager pager;
+	List<Fragment> list = new ArrayList<Fragment>();
+	list.add(new FragmentTwo());
+	list.add(new FragmentThere());
+	list.add(new FragmentFour());
+   2-3:写适配器
+	注：此处的适配器为FragmentPagerAdapter，要么统一导入v4包下面的，谨慎使用v13包下面的
+		FragmentPagerAdapter adapter = new FragmentPagerAdapter(fm) {
+			
+			@Override
+			public int getCount() {
+				// TODO Auto-generated method stub
+				return list.size();
+			}
+			
+			@Override
+			public Fragment getItem(int arg0) {
+				// TODO Auto-generated method stub
+				return list.get(arg0);
+			}
+		};	
+   2-4：写入viewpager的监听事件，即点击切换及换背景色
+	pager.setOnPageChangeListener(new OnPageChangeListener(){代码}
+	写入它的3个方法
+		选择时：
+		public void onPageSelected(int index) 
+		页面滑动后：
+		public void onPageScrolled(int arg0, float arg1, int arg2)
+		页面滑动时：
+		public void onPageScrollStateChanged(int arg0)
+  2-5：写入TextView或Button的点击方法
+	public void Test(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.tv1:
+			pager.setCurrentItem(0);
+			break;
+
+		case R.id.tv2:
+			pager.setCurrentItem(1);
+			break;
+
+		case R.id.tv3:
+			pager.setCurrentItem(2);
+			break;
+
+
+		default:
+			break;
+		}
+	}	
+
+【完】
+
+
+
+遇到的错误：
+	NoClassDefFoundError：
+	原因：
+		有可能是导入了jar包但在lib下没有添加
+
+	Could not find class 'com.firefly.fragment.MainActivity$1', referenced from method com.firefly.fragment.MainActivity.init
+	译：
+		找不到类的"MainActivity"的"init"引用方法
+	原因：
+		我的Fragment是导入的app包下面的，并不是v4包下面的，所以FragmentPagerAdapter也没有导入v4包下面的，而是选择了v13包下面的，所以导入找不到方法，然后我把Fragment和FragmentPagerAdapter都导入的v4的包，即成功了。
+
+
+
+
+
+
+SQLite
+
+SpringMVC ioc

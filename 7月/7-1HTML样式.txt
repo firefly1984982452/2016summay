@@ -1,0 +1,28 @@
+HTML样式
+
+div:
+	float:left;
+  或：
+	display:inline;
+
+过渡：
+
+	.one {
+		transition: margin 1s,box-shadow 1s;
+	}
+	.one:hover{
+		margin: 10px;
+		box-shadow: 3px 3px 3px 3px darkgray;
+	}
+
+图片重叠
+
+	.img_set{
+		position: relative;
+	}
+
+	#bwc {
+		position: absolute;
+		z-index: 100;
+		background-image: url(../img/hello.png);
+	}

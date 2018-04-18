@@ -1,0 +1,192 @@
+
+【地址：http://blog.csdn.net/heng615975867/article/details/12834833】
+
+Android自定义属性时format选项可以取用的值
+
+1. reference：参考某一资源ID。
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="名称">  
+    <attr format="reference" name="background" />  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<ImageView  
+    android:layout_width="42dip"  
+    android:layout_height="42dip"  
+    android:background="@drawable/图片ID" />  
+
+ 
+2. color：颜色值。
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="名称">  
+    <attr format="color" name="textColor" />  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<TextView  
+    android:layout_width="42dip"  
+    android:layout_height="42dip"  
+    android:textColor="#00FF00" />  
+
+ 
+3. boolean：布尔值。
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="名称">  
+    <attr format="boolean" name="focusable" />  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<Button  
+    android:layout_width="42dip"  
+    android:layout_height="42dip"  
+    android:focusable="true" />  
+
+ 
+4. dimension：尺寸值。
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="名称">  
+    <attr format="dimension" name="layout_width" />  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<Button  
+    android:layout_width="42dip"  
+    android:layout_height="42dip" />  
+
+ 
+5. float：浮点值。
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="AlphaAnimation">  
+    <attr format="float" name="fromAlpha" />  
+    <attr format="float" name="toAlpha" />  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<alpha  
+    android:fromAlpha="1.0"  
+    android:toAlpha="0.7" />  
+
+ 
+6. integer：整型值。
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="AnimatedRotateDrawable">  
+    <attr format="integer" name="frameDuration" />  
+    <attr format="integer" name="framesCount" />  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<animated-rotate  
+    android:frameDuration="100"  
+    android:framesCount="12"  
+     />  
+
+ 
+7. string：字符串。
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="MapView">  
+    <attr format="string" name="apiKey" />  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<com.google.android.maps.MapView  
+    android:layout_width="fill_parent"  
+    android:layout_height="fill_parent"  
+    android:apiKey="0jOkQ80oD1JL9C6HAja99uGXCRiS2CGjKO_bc_g" />  
+
+ 
+8. fraction：百分数。
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="RotateDrawable">  
+    <attr format="fraction" name="pivotX" />  
+    <attr format="fraction" name="pivotY" />  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<rotate  
+    android:pivotX="200%"  
+    android:pivotY="300%"  
+    />  
+
+ 
+9. enum：枚举值。
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="名称">  
+    <attr name="orientation">  
+        <enum name="horizontal" value="0" />  
+        <enum name="vertical" value="1" />  
+    </attr>  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<LinearLayout  
+    android:orientation="vertical" >  
+</LinearLayout>  
+
+ 
+10. flag：位或运算。
+     （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="名称">  
+    <attr name="windowSoftInputMode">  
+        <flag name="stateUnspecified" value="0" />  
+        <flag name="stateUnchanged" value="1" />  
+        <flag name="stateHidden" value="2" />  
+        <flag name="stateAlwaysHidden" value="3" />  
+        <flag name="stateVisible" value="4" />  
+        <flag name="stateAlwaysVisible" value="5" />  
+        <flag name="adjustUnspecified" value="0x00" />  
+        <flag name="adjustResize" value="0x10" />  
+        <flag name="adjustPan" value="0x20" />  
+        <flag name="adjustNothing" value="0x30" />  
+    </attr>  
+</declare-styleable>  
+
+ 
+     （2）属性使用：
+[html] view plaincopyprint?
+<activity  
+    android:windowSoftInputMode="stateUnspecified | stateUnchanged　|　stateHidden" >  
+</activity>  
+
+ 
+注意：属性定义时可以指定多种类型值：
+    （1）属性定义：
+[html] view plaincopyprint?
+<declare-styleable name="名称">  
+    <attr format="reference|color" name="background" />  
+</declare-styleable>  
+
+ 
+    （2）属性使用：
+[html] view plaincopyprint?
+<ImageView  
+    android:layout_width="42dip"  
+    android:layout_height="42dip"  
+    android:background="@drawable/图片ID|#00FF00" />  

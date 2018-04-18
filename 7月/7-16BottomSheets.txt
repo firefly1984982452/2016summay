@@ -1,0 +1,105 @@
+BottomSheets的使用（了解）
+    参考资料：
+        http://www.jcodecraeer.com/a/anzhuokaifa/androidkaifa/2016/0228/4008.html
+    简记：
+
+        一个底部表，就是我们经常在分享或者地图、音乐等app看到的效果
+
+    xml：
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <..a.s.design.w.CoordinatorLayout
+            android:fitsSystemWindows="true"> 
+            <..a.s.v4.w.NestedScrollView
+                android:id="@+id/bottom_sheet"
+                app:behavior_hideable="true"
+                app:behavior_peekHeight="50dp"
+                app:layout_behavior="@string/bottom_sheet_behavior"
+                >
+                  <!-- NestedScrollView里设置你的底部表长什么样的-->
+            </..a.s.v4.w.NestedScrollView>
+        </..a.s.design.w.CoordinatorLayout>
+    
+
+
+下午：CoordinatorLayout总结笔记：
+
+
+    1.FloatingActionButton使用：
+
+        xml:
+        <..a.s.design.w.CoordinatorLayout>
+            <..a.s.design.w.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_gravity="end|bottom"
+                android:src="@drawable/ic_done" />
+        </..a.s.design.w.CoordinatorLayout>
+            CoordinatorLayout作为“super-powered FrameLayout”，设置子视图的android:layout_gravity属性控制位置
+
+        activity:
+            Snackbar.make(view,"有一个妹子向你发送了一条消息",Snackbar.LENGTH_LONG)
+                .setAction("不看，我是正经人", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //这里的单击事件代表点击消除Action后的响应事件
+                        Toast.makeText(MainActivity.this, "没创造查看按钮~~~", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
+
+
+    2.AppBarLayout
+
+        2.1 AppBarLayout嵌套TabLayout
+
+            xml:
+                <..a.s.design.w.CoordinatorLayout>
+                    <..a.s.design.w.AppBarLayout>
+                        <..a.s.v7.w.Toolbar/>
+                        <..a.s.design.w.TabLayout />
+                    </..a.s.design.w.AppBarLayout>
+                    <android.support.v4.view.ViewPager/>
+                    <..a.s.design.w.FloatingActionButton/>
+                </..a.s.design.w.CoordinatorLayout>
+                Coordinator中在appbar和页面及浮动按钮
+
+
+        2.2 AppBarLayout嵌套CollapsingToolbarLayout
+
+            xml:
+                <..a.s.design.w.>
+                    <..a.s.design.w.AppBarLayout>
+                        <..a.s.design.w.CollapsingToolbarLayout>
+                            <ImageView/>
+                            <..a.s.v7.w.Toolbar/>
+                        </..a.s.design.w.CollapsingToolbarLayout>
+                    </..a.s.design.w.AppBarLayout>
+                    <..a.s.v4.w.NestedScrollView>
+                        <LinearLayout>
+                            <..a.s.v7.w.CardView>
+                                <LinearLayout>
+                                    <TextView/>
+                                    <TextView/>
+                                </LinearLayout>
+                            </..a.s.v7.w.CardView>
+                          ……
+                        </LinearLayout>
+                    </..a.s.v4.w.NestedScrollView>
+                    <..a.s.design.w.FloatingActionButton/>
+                </..a.s.design.w.CoordinatorLayout>
+                CoordinatorLayout中有Appbar（扁平化toolbar）和嵌套scrollview以及浮动按钮
+                重点使用了CollapsingToolbarLayout
+                CollapsingToolbarLayout可实现Toolbar的折叠效果。CollapsingToolbarLayout的子视图类似与LinearLayout垂直方向排放。
+
+    CollapsingToolbarLayout 提供以下属性和方法是用： 
+        1. Collapsing title：ToolBar的标题，当CollapsingToolbarLayout全屏没有折叠时，title显示的是大字体，在折叠的过程中，title不断变小到一定大小的效果。你可以调用setTitle(CharSequence)方法设置title。 
+        2. Content scrim：ToolBar被折叠到顶部固定时候的背景，你可以调用setContentScrim(Drawable)方法改变背景或者 在属性中使用 app:contentScrim=”?attr/colorPrimary”来改变背景。 
+        3. Status bar scrim：状态栏的背景，调用方法setStatusBarScrim(Drawable)。还没研究明白，不过这个只能在Android5.0以上系统有效果。 
+        4. Parallax scrolling children：CollapsingToolbarLayout滑动时，子视图的视觉差，可以通过属性app:layout_collapseParallaxMultiplier=”0.6”改变。值de的范围[0.0,1.0]，值越大视察越大。 
+        5. CollapseMode ：子视图的折叠模式，在子视图设置，有两种“pin”：固定模式，在折叠的时候最后固定在顶端；“parallax”：视差模式，在折叠的时候会有个视差折叠的效果。我们可以在布局中使用属性app:layout_collapseMode=”parallax”来改变。
+
+
+
+    Android Design Support Library学习
+
+
